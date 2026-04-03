@@ -6,6 +6,11 @@ on:
   schedule:
     - cron: '0 6 * * *'  # daily at 6am UTC
   workflow_dispatch:
+    inputs:
+      api_url:
+        description: 'API JSON URL (e.g. https://cdn.sbox.game/releases/2026-04-02-21-06-53.zip.json)'
+        required: false
+        type: string
 
 permissions:
   contents: read
@@ -26,11 +31,13 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - name: Fetch latest API data
+      - name: Fetch API data
+        env:
+          DEFAULT_URL: "https://cdn.sbox.game/releases/2026-04-02-21-06-53.zip.json"
         run: |
-          RELEASES_URL="https://cdn.sbox.game/releases"
-          # Fetch the latest release JSON - try the releases index first
-          curl -sfL "https://cdn.sbox.game/releases/2026-04-02-21-06-53.zip.json" -o api-data.json
+          URL="${{ inputs.api_url || env.DEFAULT_URL }}"
+          echo "Fetching API data from: $URL"
+          curl -sfL "$URL" -o api-data.json
           echo "Downloaded api-data.json ($(wc -c < api-data.json) bytes)"
       - run: npm run build
       - uses: actions/upload-pages-artifact@v3
