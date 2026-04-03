@@ -113,7 +113,7 @@ export function Search({ base = "" }: { base?: string }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center pt-[20vh]">
-      <div className="fixed inset-0 bg-black/60" onClick={() => setOpen(false)} />
+      <div className="fixed inset-0" style={{ backgroundColor: "rgba(0,0,0,0.6)" }} onClick={() => setOpen(false)} />
       <div className="relative w-full max-w-lg rounded-xl border border-border bg-surface shadow-2xl">
         <div className="flex items-center border-b border-border px-4">
           <svg className="h-4 w-4 text-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
