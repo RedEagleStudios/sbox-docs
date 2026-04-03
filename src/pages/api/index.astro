@@ -1,6 +1,6 @@
 ---
-import DocsLayout from "../layouts/DocsLayout.astro";
-import { getNamespaces } from "../lib/api-data";
+import DocsLayout from "../../layouts/DocsLayout.astro";
+import { getNamespaces } from "../../lib/api-data";
 
 const namespaces = getNamespaces();
 const totalTypes = namespaces.reduce((sum, ns) => sum + ns.types.length, 0);
@@ -22,10 +22,10 @@ const namespacesWithCounts = namespaces.map((ns) => {
 });
 ---
 
-<DocsLayout title="Namespaces">
-  <div class="max-w-4xl mx-auto">
+<DocsLayout title="API Reference">
+  <div data-pagefind-body>
     <div class="mb-8">
-      <h1 class="text-3xl font-bold text-accent mb-2">Namespaces</h1>
+      <h1 class="text-3xl font-bold text-accent mb-2">API Reference</h1>
       <p class="text-text-muted">
         {totalTypes} types across {namespaces.length} namespaces
       </p>
