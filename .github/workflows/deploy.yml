@@ -24,13 +24,11 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      skip: ${{ steps.check.outputs.skip }}
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-      - run: npm ci
+
       - name: Fetch API data
         env:
           DEFAULT_URL: "https://cdn.sbox.game/releases/2026-04-02-21-06-53.zip.json"
@@ -39,13 +37,46 @@ jobs:
           echo "Fetching API data from: $URL"
           curl -sfL "$URL" -o api-data.json
           echo "Downloaded api-data.json ($(wc -c < api-data.json) bytes)"
+
+      - name: Restore hash cache
+        uses: actions/cache@v4
+        with:
+          path: .api-hash
+          key: api-hash
+
+      - name: Check if data changed
+        id: check
+        run: |
+          NEW_HASH=$(sha256sum api-data.json | cut -d' ' -f1)
+          echo "Current hash: $NEW_HASH"
+          if [ -f .api-hash ] && [ "$(cat .api-hash)" = "$NEW_HASH" ] && [ "${{ github.event_name }}" = "schedule" ]; then
+            echo "API data unchanged on scheduled run, skipping build"
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "$NEW_HASH" > .api-hash
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/setup-node@v4
+        if: steps.check.outputs.skip != 'true'
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+        if: steps.check.outputs.skip != 'true'
+
       - run: npm run build
+        if: steps.check.outputs.skip != 'true'
+
       - uses: actions/upload-pages-artifact@v3
+        if: steps.check.outputs.skip != 'true'
         with:
           path: dist
 
   deploy:
     needs: build
+    if: needs.build.outputs.skip != 'true'
     runs-on: ubuntu-latest
     environment:
       name: github-pages
