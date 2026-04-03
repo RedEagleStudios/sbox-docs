@@ -3,7 +3,7 @@ import DocsLayout from "../layouts/DocsLayout.astro";
 import { getAllTypes } from "../lib/api-data";
 
 const allTypes = getAllTypes();
-const base = import.meta.env.BASE_URL;
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 ---
 
 <DocsLayout title="Home">

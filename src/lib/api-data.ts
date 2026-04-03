@@ -41,7 +41,7 @@ export function getSlugForType(fullName: string): string | undefined {
 
 export function typeLink(fullName: string): string | undefined {
   const slug = slugByFullName.get(fullName);
-  const base = import.meta.env.BASE_URL;
+  const base = import.meta.env.BASE_URL.replace(/\/$/, "");
   if (slug) return `${base}/api/${slug}`;
   return undefined;
 }

@@ -6,8 +6,7 @@ import tailwindcss from '@tailwindcss/vite';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://redeaglestudios.github.io',
-  base: '/sbox-docs',
+  site: 'https://sbox.redeaglestudios.org',
   integrations: [react()],
 
   vite: {

@@ -43,7 +43,7 @@ function formatParams(params?: { Name: string; Type: string }[]): string {
   <div data-pagefind-body>
   <!-- Breadcrumb -->
   <div class="flex items-center gap-2 text-sm text-text-muted mb-6">
-    <a href={`${import.meta.env.BASE_URL}/`} class="hover:text-accent transition-colors">Api</a>
+    <a href={`${import.meta.env.BASE_URL.replace(/\/$/, "")}/api/`} class="hover:text-accent transition-colors">Api</a>
     <span>&rsaquo;</span>
     {type.Namespace && (
       <>

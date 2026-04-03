@@ -4,7 +4,7 @@ import { getNamespaces } from "../../lib/api-data";
 
 const namespaces = getNamespaces();
 const totalTypes = namespaces.reduce((sum, ns) => sum + ns.types.length, 0);
-const base = import.meta.env.BASE_URL;
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 
 const groupColors: Record<string, string> = {
   class: "text-blue-400",
