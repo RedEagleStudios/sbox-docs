@@ -12,15 +12,15 @@ interface PagefindResponse {
 
 let pagefind: { search: (query: string) => Promise<PagefindResponse> } | null = null;
 
-async function getPagefind() {
+async function getPagefind(base: string) {
   if (!pagefind) {
     // @ts-ignore - pagefind is generated at build time
-    pagefind = await import(/* @vite-ignore */ "/pagefind/pagefind.js");
+    pagefind = await import(/* @vite-ignore */ `${base}/pagefind/pagefind.js`);
   }
   return pagefind!;
 }
 
-export function Search() {
+export function Search({ base = "" }: { base?: string }) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<PagefindResult[]>([]);
@@ -62,7 +62,7 @@ export function Search() {
     setLoading(true);
 
     (async () => {
-      const pf = await getPagefind();
+      const pf = await getPagefind(base);
       const response = await pf.search(query);
       const data = await Promise.all(
         response.results.slice(0, 15).map((r) => r.data())

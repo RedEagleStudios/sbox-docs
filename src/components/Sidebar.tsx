@@ -5,9 +5,10 @@ import type { NamespaceGroup } from "../lib/types";
 interface Props {
   namespaces: NamespaceGroup[];
   currentSlug?: string;
+  base?: string;
 }
 
-export function Sidebar({ namespaces, currentSlug }: Props) {
+export function Sidebar({ namespaces, currentSlug, base = "" }: Props) {
   const [filter, setFilter] = useState("");
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
 
@@ -56,7 +57,7 @@ export function Sidebar({ namespaces, currentSlug }: Props) {
                 {ns.types.map((t) => (
                   <a
                     key={t.fullName}
-                    href={`/api/${t.slug}`}
+                    href={`${base}/api/${t.slug}`}
                     className={`flex items-center gap-1.5 px-2 py-1 text-xs rounded transition-colors ${
                       currentSlug === t.slug
                         ? "bg-accent/20 text-accent"

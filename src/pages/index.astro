@@ -38,7 +38,7 @@ const namespacesWithCounts = namespaces.map((ns) => {
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
       {namespacesWithCounts.map((ns) => (
         <a
-          href={`/api/${ns.types[0].slug}`}
+          href={`${import.meta.env.BASE_URL}/api/${ns.types[0].slug}`}
           class="group block rounded-xl border border-border bg-surface p-5 hover:border-accent/50 hover:bg-surface-hover transition-all"
         >
           <h2 class="font-semibold text-text group-hover:text-accent transition-colors mb-2 truncate">
