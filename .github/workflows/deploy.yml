@@ -57,6 +57,11 @@ jobs:
             echo "skip=false" >> "$GITHUB_OUTPUT"
           fi
 
+      - uses: actions/setup-node@v4
+        if: steps.check.outputs.skip != 'true'
+        with:
+          node-version: 22
+
       - uses: oven-sh/setup-bun@v2
         if: steps.check.outputs.skip != 'true'
 
