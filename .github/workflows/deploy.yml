@@ -3,6 +3,8 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [main]
+  schedule:
+    - cron: '0 6 * * *'  # daily at 6am UTC
   workflow_dispatch:
 
 permissions:
@@ -24,6 +26,12 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - name: Fetch latest API data
+        run: |
+          RELEASES_URL="https://cdn.sbox.game/releases"
+          # Fetch the latest release JSON - try the releases index first
+          curl -sfL "https://cdn.sbox.game/releases/2026-04-02-21-06-53.zip.json" -o api-data.json
+          echo "Downloaded api-data.json ($(wc -c < api-data.json) bytes)"
       - run: npm run build
       - uses: actions/upload-pages-artifact@v3
         with:
