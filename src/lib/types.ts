@@ -88,6 +88,8 @@ export interface Method {
   IsAbstract?: boolean;
   IsSealed?: boolean;
   IsExtension?: boolean;
+  IsOverride?: boolean;
+  IsProtected?: boolean;
   Documentation?: Documentation;
   DocId: string;
   Attributes?: AttributeInfo[];
