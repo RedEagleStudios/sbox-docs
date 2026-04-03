@@ -40,6 +40,7 @@ function formatParams(params?: { Name: string; Type: string }[]): string {
 ---
 
 <DocsLayout title={type.Name} currentSlug={slug}>
+  <div data-pagefind-body>
   <!-- Breadcrumb -->
   <div class="flex items-center gap-2 text-sm text-text-muted mb-6">
     <a href="/" class="hover:text-accent transition-colors">Api</a>
@@ -229,5 +230,6 @@ function formatParams(params?: { Name: string; Type: string }[]): string {
   <div class="mt-12 pt-4 border-t border-border text-xs text-text-muted">
     <span>Assembly: {type.Assembly}</span>
     {type.Namespace && <span class="ml-4">Namespace: {type.Namespace}</span>}
+  </div>
   </div>
 </DocsLayout>

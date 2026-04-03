@@ -1,30 +1,32 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { TypeBadge } from "./TypeBadge";
 
-interface SearchEntry {
-  n: string; // name
-  f: string; // fullName
-  s: string; // slug
-  g: string; // group
-  d: string; // description
+interface PagefindResult {
+  url: string;
+  meta: { title: string };
+  excerpt: string;
+}
+
+interface PagefindResponse {
+  results: { data: () => Promise<PagefindResult> }[];
+}
+
+let pagefind: { search: (query: string) => Promise<PagefindResponse> } | null = null;
+
+async function getPagefind() {
+  if (!pagefind) {
+    // @ts-ignore - pagefind is generated at build time
+    pagefind = await import(/* @vite-ignore */ "/pagefind/pagefind.js");
+  }
+  return pagefind!;
 }
 
 export function Search() {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
-  const [results, setResults] = useState<SearchEntry[]>([]);
-  const [index, setIndex] = useState<SearchEntry[] | null>(null);
+  const [results, setResults] = useState<PagefindResult[]>([]);
+  const [loading, setLoading] = useState(false);
   const [selected, setSelected] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
-
-  // Load search index on first open
-  useEffect(() => {
-    if (open && !index) {
-      fetch("/search-index.json")
-        .then((r) => r.json())
-        .then((data: SearchEntry[]) => setIndex(data));
-    }
-  }, [open, index]);
 
   // Keyboard shortcut
   useEffect(() => {
@@ -49,31 +51,36 @@ export function Search() {
     }
   }, [open]);
 
-  // Search
+  // Search with pagefind
   useEffect(() => {
-    if (!index || !query) {
+    if (!query) {
       setResults([]);
       return;
     }
-    const q = query.toLowerCase();
-    const matches = index
-      .filter(
-        (e) =>
-          e.n.toLowerCase().includes(q) ||
-          e.f.toLowerCase().includes(q)
-      )
-      .slice(0, 20);
-    setResults(matches);
-    setSelected(0);
-  }, [query, index]);
 
-  const navigate = useCallback(
-    (slug: string) => {
-      setOpen(false);
-      window.location.href = `/api/${slug}`;
-    },
-    []
-  );
+    let cancelled = false;
+    setLoading(true);
+
+    (async () => {
+      const pf = await getPagefind();
+      const response = await pf.search(query);
+      const data = await Promise.all(
+        response.results.slice(0, 15).map((r) => r.data())
+      );
+      if (!cancelled) {
+        setResults(data);
+        setSelected(0);
+        setLoading(false);
+      }
+    })();
+
+    return () => { cancelled = true; };
+  }, [query]);
+
+  const navigate = useCallback((url: string) => {
+    setOpen(false);
+    window.location.href = url;
+  }, []);
 
   const onKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "ArrowDown") {
@@ -83,7 +90,7 @@ export function Search() {
       e.preventDefault();
       setSelected((s) => Math.max(s - 1, 0));
     } else if (e.key === "Enter" && results[selected]) {
-      navigate(results[selected].s);
+      navigate(results[selected].url);
     }
   };
 
@@ -131,26 +138,28 @@ export function Search() {
           <div className="max-h-80 overflow-y-auto p-2">
             {results.map((r, i) => (
               <button
-                key={r.f}
-                onClick={() => navigate(r.s)}
-                className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm transition-colors ${
+                key={r.url}
+                onClick={() => navigate(r.url)}
+                className={`flex w-full flex-col gap-0.5 rounded-lg px-3 py-2 text-left text-sm transition-colors ${
                   i === selected ? "bg-accent/20 text-accent" : "text-text hover:bg-surface-hover"
                 }`}
               >
-                <TypeBadge group={r.g} className="text-[9px] px-1 py-0 shrink-0" />
-                <div className="min-w-0">
-                  <div className="font-medium truncate">{r.n}</div>
-                  <div className="text-xs text-text-muted truncate">{r.f}</div>
-                </div>
+                <div className="font-medium truncate">{r.meta.title}</div>
+                {r.excerpt && (
+                  <div
+                    className="text-xs text-text-muted line-clamp-2 [&_mark]:bg-accent/30 [&_mark]:text-accent [&_mark]:rounded [&_mark]:px-0.5"
+                    dangerouslySetInnerHTML={{ __html: r.excerpt }}
+                  />
+                )}
               </button>
             ))}
           </div>
         )}
-        {query && results.length === 0 && index && (
+        {query && results.length === 0 && !loading && (
           <div className="p-8 text-center text-sm text-text-muted">No results found.</div>
         )}
-        {query && !index && (
-          <div className="p-8 text-center text-sm text-text-muted">Loading search index...</div>
+        {loading && (
+          <div className="p-8 text-center text-sm text-text-muted">Searching...</div>
         )}
       </div>
     </div>
