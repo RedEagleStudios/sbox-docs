@@ -1,0 +1,56 @@
+---
+import "../styles/globals.css";
+import { Sidebar } from "../components/Sidebar";
+import { Search } from "../components/Search";
+import { getNamespaces } from "../lib/api-data";
+
+interface Props {
+  title: string;
+  currentSlug?: string;
+}
+
+const { title, currentSlug } = Astro.props;
+const namespaces = getNamespaces();
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title} - s&box API Reference</title>
+    <meta name="description" content={`${title} - s&box API Reference Documentation`} />
+  </head>
+  <body class="bg-background text-text">
+    <!-- Header -->
+    <header class="sticky top-0 z-40 border-b border-border bg-background/80 backdrop-blur-sm">
+      <div class="flex items-center justify-between px-4 h-14">
+        <div class="flex items-center gap-4">
+          <a href="/" class="flex items-center gap-2 font-bold text-accent hover:text-accent-hover transition-colors">
+            <span class="bg-accent text-white text-xs font-bold px-1.5 py-0.5 rounded">s&</span>
+            <span class="hidden sm:inline">API Reference</span>
+          </a>
+        </div>
+        <div class="flex-1 max-w-md mx-4">
+          <Search client:idle />
+        </div>
+        <div class="flex items-center gap-3 text-sm text-text-muted">
+          <a href="/" class="hover:text-text transition-colors">Home</a>
+        </div>
+      </div>
+    </header>
+
+    <div class="flex">
+      <!-- Sidebar -->
+      <aside class="hidden lg:flex flex-col w-72 border-r border-border h-[calc(100vh-3.5rem)] sticky top-14 shrink-0">
+        <Sidebar client:idle namespaces={namespaces} currentSlug={currentSlug} />
+      </aside>
+
+      <!-- Main content -->
+      <main class="flex-1 min-w-0 px-6 py-8 max-w-5xl">
+        <slot />
+      </main>
+    </div>
+  </body>
+</html>

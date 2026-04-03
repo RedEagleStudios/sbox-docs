@@ -1,0 +1,233 @@
+---
+import DocsLayout from "../../layouts/DocsLayout.astro";
+import { TypeBadge } from "../../components/TypeBadge";
+import { getAllTypes, fullNameToSlug, typeLink, resolveType, stripXml } from "../../lib/api-data";
+import type { ApiType, Method, Property, Field, Constructor } from "../../lib/types";
+
+export function getStaticPaths() {
+  return getAllTypes().map((type) => ({
+    params: { slug: fullNameToSlug(type.FullName) },
+    props: { type },
+  }));
+}
+
+interface Props {
+  type: ApiType;
+}
+
+const { type } = Astro.props;
+const slug = fullNameToSlug(type.FullName);
+
+// Build modifiers string
+const mods: string[] = [];
+if (type.IsPublic) mods.push("public");
+if (type.IsStatic) mods.push("static");
+if (type.IsAbstract && !type.IsInterface) mods.push("abstract");
+if (type.IsSealed) mods.push("sealed");
+mods.push(type.Group);
+
+const signature = `${mods.join(" ")} ${type.Name}${type.BaseType ? ` : ${type.BaseType.split(".").pop()}` : ""}`;
+
+const properties = (type.Properties ?? []).filter((p) => p.IsPublic);
+const methods = (type.Methods ?? []).filter((m) => m.IsPublic);
+const fields = (type.Fields ?? []).filter((f) => f.IsPublic);
+const constructors = (type.Constructors ?? []).filter((c) => c.IsPublic);
+
+function formatParams(params?: { Name: string; Type: string }[]): string {
+  if (!params || params.length === 0) return "()";
+  return `(${params.map((p) => `${resolveType(p.Type).display} ${p.Name}`).join(", ")})`;
+}
+---
+
+<DocsLayout title={type.Name} currentSlug={slug}>
+  <!-- Breadcrumb -->
+  <div class="flex items-center gap-2 text-sm text-text-muted mb-6">
+    <a href="/" class="hover:text-accent transition-colors">Api</a>
+    <span>&rsaquo;</span>
+    {type.Namespace && (
+      <>
+        <span>{type.Namespace}</span>
+        <span>&rsaquo;</span>
+      </>
+    )}
+    <span class="text-text">{type.Name}</span>
+  </div>
+
+  <!-- Type Header -->
+  <div class="mb-8">
+    <div class="flex items-center gap-3 mb-3">
+      <TypeBadge group={type.Group} />
+      <h1 class="text-3xl font-bold text-accent">{type.Name}</h1>
+    </div>
+    <code class="text-sm text-text-muted">{signature}</code>
+    {type.Documentation?.Summary && (
+      <p class="mt-4 text-text-muted leading-relaxed">
+        {stripXml(type.Documentation.Summary)}
+      </p>
+    )}
+    {type.Documentation?.Remarks && (
+      <p class="mt-2 text-sm text-text-muted leading-relaxed">
+        {stripXml(type.Documentation.Remarks)}
+      </p>
+    )}
+  </div>
+
+  <!-- Constructors -->
+  {constructors.length > 0 && (
+    <section class="mb-8">
+      <h2 class="text-xl font-semibold text-text mb-4 border-b border-border pb-2">Constructors</h2>
+      <div class="space-y-3">
+        {constructors.map((c) => (
+          <div class="rounded-lg border border-border bg-surface p-4">
+            <code class="text-sm text-accent">
+              {type.Name}{formatParams(c.Parameters)}
+            </code>
+            {c.Documentation?.Summary && (
+              <p class="mt-2 text-sm text-text-muted">{stripXml(c.Documentation.Summary)}</p>
+            )}
+          </div>
+        ))}
+      </div>
+    </section>
+  )}
+
+  <!-- Properties -->
+  {properties.length > 0 && (
+    <section class="mb-8">
+      <h2 class="text-xl font-semibold text-text mb-4 border-b border-border pb-2">Properties</h2>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="border-b border-border text-left text-text-muted">
+              <th class="pb-2 pr-4 font-medium">Name</th>
+              <th class="pb-2 pr-4 font-medium">Type</th>
+              <th class="pb-2 font-medium">Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            {properties.map((p) => {
+              const resolved = resolveType(p.PropertyType);
+              return (
+                <tr class="border-b border-border/50 hover:bg-surface-hover transition-colors">
+                  <td class="py-2.5 pr-4">
+                    <code class="text-accent text-xs">{p.Name}</code>
+                    {p.IsStatic && <span class="ml-1 text-[10px] text-yellow-400">static</span>}
+                  </td>
+                  <td class="py-2.5 pr-4">
+                    {resolved.href ? (
+                      <a href={resolved.href} class="text-xs text-blue-400 hover:underline">{resolved.display}</a>
+                    ) : (
+                      <span class="text-xs text-text-muted">{resolved.display}</span>
+                    )}
+                  </td>
+                  <td class="py-2.5 text-text-muted text-xs">
+                    {p.Documentation?.Summary ? stripXml(p.Documentation.Summary) : ""}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  )}
+
+  <!-- Methods -->
+  {methods.length > 0 && (
+    <section class="mb-8">
+      <h2 class="text-xl font-semibold text-text mb-4 border-b border-border pb-2">Methods</h2>
+      <div class="space-y-3">
+        {methods.map((m) => {
+          const ret = resolveType(m.ReturnType);
+          return (
+            <div class="rounded-lg border border-border bg-surface p-4">
+              <div class="flex flex-wrap items-center gap-2">
+                {ret.href ? (
+                  <a href={ret.href} class="text-xs text-blue-400 hover:underline">{ret.display}</a>
+                ) : (
+                  <span class="text-xs text-text-muted">{ret.display}</span>
+                )}
+                <code class="text-sm text-accent">{m.Name}</code>
+                <code class="text-xs text-text-muted">{formatParams(m.Parameters)}</code>
+                {m.IsStatic && <span class="text-[10px] text-yellow-400 border border-yellow-400/30 rounded px-1">static</span>}
+              </div>
+              {m.Documentation?.Summary && (
+                <p class="mt-2 text-sm text-text-muted">{stripXml(m.Documentation.Summary)}</p>
+              )}
+              {m.Parameters && m.Parameters.length > 0 && m.Documentation?.Params && (
+                <div class="mt-2 pl-4 border-l-2 border-border">
+                  {m.Parameters.map((param) => (
+                    <div class="text-xs text-text-muted py-0.5">
+                      <code class="text-text">{param.Name}</code>
+                      {m.Documentation?.Params?.[param.Name] && (
+                        <span> — {stripXml(m.Documentation.Params[param.Name])}</span>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </section>
+  )}
+
+  <!-- Fields -->
+  {fields.length > 0 && (
+    <section class="mb-8">
+      <h2 class="text-xl font-semibold text-text mb-4 border-b border-border pb-2">
+        {type.IsEnum ? "Enum Values" : "Fields"}
+      </h2>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="border-b border-border text-left text-text-muted">
+              <th class="pb-2 pr-4 font-medium">Name</th>
+              {!type.IsEnum && <th class="pb-2 pr-4 font-medium">Type</th>}
+              {type.IsEnum && <th class="pb-2 pr-4 font-medium">Value</th>}
+              <th class="pb-2 font-medium">Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            {fields.map((f) => {
+              const resolved = f.FieldType ? resolveType(f.FieldType) : null;
+              return (
+                <tr class="border-b border-border/50 hover:bg-surface-hover transition-colors">
+                  <td class="py-2.5 pr-4">
+                    <code class="text-accent text-xs">{f.Name}</code>
+                    {f.IsStatic && !type.IsEnum && <span class="ml-1 text-[10px] text-yellow-400">static</span>}
+                    {f.IsConst && <span class="ml-1 text-[10px] text-purple-400">const</span>}
+                  </td>
+                  {!type.IsEnum && (
+                    <td class="py-2.5 pr-4">
+                      {resolved?.href ? (
+                        <a href={resolved.href} class="text-xs text-blue-400 hover:underline">{resolved.display}</a>
+                      ) : (
+                        <span class="text-xs text-text-muted">{resolved?.display}</span>
+                      )}
+                    </td>
+                  )}
+                  {type.IsEnum && (
+                    <td class="py-2.5 pr-4 text-xs text-text-muted">
+                      {f.ConstantValue !== undefined ? String(f.ConstantValue) : ""}
+                    </td>
+                  )}
+                  <td class="py-2.5 text-text-muted text-xs">
+                    {f.Documentation?.Summary ? stripXml(f.Documentation.Summary) : ""}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  )}
+
+  <!-- Assembly info -->
+  <div class="mt-12 pt-4 border-t border-border text-xs text-text-muted">
+    <span>Assembly: {type.Assembly}</span>
+    {type.Namespace && <span class="ml-4">Namespace: {type.Namespace}</span>}
+  </div>
+</DocsLayout>

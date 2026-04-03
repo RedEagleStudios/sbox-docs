@@ -1,0 +1,58 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import { getNamespaces } from "../lib/api-data";
+
+const namespaces = getNamespaces();
+const totalTypes = namespaces.reduce((sum, ns) => sum + ns.types.length, 0);
+
+const groupColors: Record<string, string> = {
+  class: "text-blue-400",
+  struct: "text-green-400",
+  enum: "text-purple-400",
+  interface: "text-yellow-400",
+};
+
+const namespacesWithCounts = namespaces.map((ns) => {
+  const counts: Record<string, number> = {};
+  for (const t of ns.types) {
+    counts[t.group] = (counts[t.group] || 0) + 1;
+  }
+  return { ...ns, counts };
+});
+---
+
+<DocsLayout title="Api Reference">
+  <div class="max-w-4xl mx-auto">
+    <!-- Hero -->
+    <div class="text-center py-12">
+      <h1 class="text-4xl font-bold text-accent mb-3">Api Reference</h1>
+      <p class="text-text-muted text-lg">
+        Welcome to the API documentation for s&amp;box.
+      </p>
+      <p class="text-text-muted text-sm mt-2">
+        {totalTypes} types across {namespaces.length} namespaces
+      </p>
+    </div>
+
+    <!-- Namespace Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      {namespacesWithCounts.map((ns) => (
+        <a
+          href={`/api/${ns.types[0].slug}`}
+          class="group block rounded-xl border border-border bg-surface p-5 hover:border-accent/50 hover:bg-surface-hover transition-all"
+        >
+          <h2 class="font-semibold text-text group-hover:text-accent transition-colors mb-2 truncate">
+            {ns.namespace}
+          </h2>
+          <div class="flex flex-wrap gap-2 text-xs">
+            {Object.entries(ns.counts).map(([group, count]) => (
+              <span class={groupColors[group] ?? "text-text-muted"}>
+                {count} {group}{count > 1 ? (group === "class" ? "es" : "s") : ""}
+              </span>
+            ))}
+          </div>
+        </a>
+      ))}
+    </div>
+  </div>
+</DocsLayout>
