@@ -26,7 +26,8 @@ if (type.IsAbstract && !type.IsInterface) mods.push("abstract");
 if (type.IsSealed) mods.push("sealed");
 mods.push(type.Group);
 
-const signature = `${mods.join(" ")} ${type.Name}${type.BaseType ? ` : ${type.BaseType.split(".").pop()}` : ""}`;
+const baseTypeName = type.BaseType?.split(".").pop();
+const baseTypeLink = type.BaseType ? typeLink(type.BaseType) : undefined;
 
 const properties = (type.Properties ?? []).filter((p) => p.IsPublic);
 const methods = (type.Methods ?? []).filter((m) => m.IsPublic);
@@ -60,7 +61,12 @@ function formatParams(params?: { Name: string; Type: string }[]): string {
       <TypeBadge group={type.Group} />
       <h1 class="text-3xl font-bold text-accent">{type.Name}</h1>
     </div>
-    <code class="text-sm text-text-muted">{signature}</code>
+    <code class="text-sm"><!--
+      -->{mods.slice(0, -1).map((m) => <><span class="syn-keyword">{m}</span>{" "}</>)}<!--
+      --><span class="syn-keyword">{type.Group}</span>{" "}<!--
+      --><span class="syn-name">{type.Name}</span><!--
+      -->{baseTypeName && <>{" "}<span class="syn-punct">:</span>{" "}{baseTypeLink ? <a href={baseTypeLink} class="syn-type-link hover:underline">{baseTypeName}</a> : <span class="syn-type">{baseTypeName}</span>}</>}<!--
+    --></code>
     {type.Documentation?.Summary && (
       <p class="mt-4 text-text-muted leading-relaxed">
         {stripXml(type.Documentation.Summary)}

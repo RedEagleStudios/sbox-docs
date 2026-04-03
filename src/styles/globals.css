@@ -59,3 +59,13 @@ pre code {
   border: none;
   padding: 0;
 }
+
+/* Syntax highlighting for signatures */
+.syn-keyword { color: #c678dd; }
+.syn-type { color: #e5c07b; }
+.syn-type-link { color: #61afef; }
+.syn-name { color: #61afef; }
+.syn-param { color: #e2e8f0; }
+.syn-punct { color: #abb2bf; }
+.syn-modifier { color: #c678dd; }
+.syn-string { color: #98c379; }

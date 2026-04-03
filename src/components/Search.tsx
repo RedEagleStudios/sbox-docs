@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import { createPortal } from "react-dom";
 
 interface PagefindResult {
   url: string;
@@ -111,7 +112,7 @@ export function Search({ base = "" }: { base?: string }) {
     );
   }
 
-  return (
+  return createPortal(
     <div className="fixed inset-0 z-50 flex items-start justify-center pt-[20vh]">
       <div className="fixed inset-0" style={{ backgroundColor: "rgba(0,0,0,0.6)" }} onClick={() => setOpen(false)} />
       <div className="relative w-full max-w-lg rounded-xl border border-border bg-surface shadow-2xl">
@@ -162,6 +163,7 @@ export function Search({ base = "" }: { base?: string }) {
           <div className="p-8 text-center text-sm text-text-muted">Searching...</div>
         )}
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

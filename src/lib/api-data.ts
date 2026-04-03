@@ -139,7 +139,23 @@ export function getNamespaceTree(): NamespaceTreeNode[] {
   }
   for (const root of rootNodes) calcTotal(root);
 
-  return rootNodes;
+  // Compact: merge nodes that have no types and exactly one child
+  // e.g. Facepunch (empty) > ActionGraphs → Facepunch.ActionGraphs
+  function compact(nodes: NamespaceTreeNode[]): NamespaceTreeNode[] {
+    return nodes.map((node) => {
+      node.children = compact(node.children);
+      while (node.types.length === 0 && node.children.length === 1) {
+        const child = node.children[0];
+        node.name = `${node.name}.${child.name}`;
+        node.fullPath = child.fullPath;
+        node.types = child.types;
+        node.children = child.children;
+      }
+      return node;
+    });
+  }
+
+  return compact(rootNodes);
 }
 
 /** Strip XML tags from documentation summaries for plain text */
