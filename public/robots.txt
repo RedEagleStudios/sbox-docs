@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://sbox.redeaglestudios.org/sitemap-index.xml

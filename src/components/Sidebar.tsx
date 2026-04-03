@@ -5,12 +5,14 @@ import type { NamespaceTreeNode } from "../lib/types";
 interface Props {
   tree: NamespaceTreeNode[];
   currentSlug?: string;
+  currentNamespace?: string;
   base?: string;
 }
 
 function TreeNode({
   node,
   currentSlug,
+  currentNamespace,
   base,
   depth,
   filter,
@@ -19,6 +21,7 @@ function TreeNode({
 }: {
   node: NamespaceTreeNode;
   currentSlug?: string;
+  currentNamespace?: string;
   base: string;
   depth: number;
   filter: string;
@@ -28,14 +31,17 @@ function TreeNode({
   const open = filter ? true : expandedSet.has(node.fullPath);
   const hasChildren = node.children.length > 0;
   const hasTypes = node.types.length > 0;
+  const isActiveNs = currentNamespace === node.fullPath;
 
   return (
     <div>
       <div
         className={`flex items-center gap-0.5 py-1 text-xs font-semibold rounded transition-colors ${
-          expandedSet.has(node.fullPath) && !filter
-            ? "text-accent bg-accent/5"
-            : "text-text-muted hover:text-text"
+          isActiveNs
+            ? "text-accent bg-accent/20"
+            : expandedSet.has(node.fullPath) && !filter
+              ? "text-accent bg-accent/5"
+              : "text-text-muted hover:text-text"
         }`}
         style={{ paddingLeft: `${depth * 12 + 8}px` }}
       >
@@ -74,6 +80,7 @@ function TreeNode({
               key={child.fullPath}
               node={child}
               currentSlug={currentSlug}
+              currentNamespace={currentNamespace}
               base={base}
               depth={depth + 1}
               filter={filter}
@@ -106,15 +113,22 @@ function TreeNode({
   );
 }
 
-// Find all ancestor paths for a given slug in the tree
-function findAncestors(nodes: NamespaceTreeNode[], slug: string): string[] {
+// Find all ancestor paths for a given slug or namespace in the tree
+function findAncestors(nodes: NamespaceTreeNode[], slug?: string, namespace?: string): string[] {
   for (const node of nodes) {
-    if (node.types.some((t) => t.slug === slug)) {
+    // Match by namespace path
+    if (namespace && (node.fullPath === namespace || namespace.startsWith(node.fullPath + "."))) {
+      if (node.fullPath === namespace) return [node.fullPath];
+      const childResult = findAncestors(node.children, slug, namespace);
+      if (childResult.length > 0) return [node.fullPath, ...childResult];
+    }
+    // Match by type slug
+    if (slug && node.types.some((t) => t.slug === slug)) {
       return [node.fullPath];
     }
-    const childResult = findAncestors(node.children, slug);
-    if (childResult.length > 0) {
-      return [node.fullPath, ...childResult];
+    if (slug) {
+      const childResult = findAncestors(node.children, slug, namespace);
+      if (childResult.length > 0) return [node.fullPath, ...childResult];
     }
   }
   return [];
@@ -141,13 +155,13 @@ function filterTree(nodes: NamespaceTreeNode[], q: string): NamespaceTreeNode[] 
     .filter((n): n is NamespaceTreeNode => n !== null);
 }
 
-export function Sidebar({ tree, currentSlug, base = "" }: Props) {
+export function Sidebar({ tree, currentSlug, currentNamespace, base = "" }: Props) {
   const [filter, setFilter] = useState("");
 
   const ancestors = useMemo(() => {
-    if (!currentSlug) return new Set<string>();
-    return new Set(findAncestors(tree, currentSlug));
-  }, [tree, currentSlug]);
+    if (!currentSlug && !currentNamespace) return new Set<string>();
+    return new Set(findAncestors(tree, currentSlug, currentNamespace));
+  }, [tree, currentSlug, currentNamespace]);
 
   const [expanded, setExpanded] = useState<Set<string>>(() => new Set(ancestors));
 
@@ -186,6 +200,7 @@ export function Sidebar({ tree, currentSlug, base = "" }: Props) {
             key={node.fullPath}
             node={node}
             currentSlug={currentSlug}
+            currentNamespace={currentNamespace}
             base={base}
             depth={0}
             filter={filter}

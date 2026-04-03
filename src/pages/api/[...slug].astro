@@ -40,7 +40,7 @@ function formatParams(params?: { Name: string; Type: string }[]): string {
 }
 ---
 
-<DocsLayout title={type.Name} currentSlug={slug}>
+<DocsLayout title={type.Name} description={type.Documentation?.Summary ? stripXml(type.Documentation.Summary) : `${type.Name} - s&box ${type.Group} in ${type.Namespace || "global"} namespace`} currentSlug={slug} isTypePage={true}>
   <div data-pagefind-body>
   <!-- Breadcrumb -->
   <div class="flex items-center gap-2 text-sm text-text-muted mb-6 flex-wrap">

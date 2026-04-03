@@ -1,23 +1,10 @@
 ---
 import DocsLayout from "../../layouts/DocsLayout.astro";
-import { getNamespaceTree, getAllTypes } from "../../lib/api-data";
-import type { NamespaceTreeNode } from "../../lib/types";
+import { getNamespaces, getAllTypes } from "../../lib/api-data";
 
-const tree = getNamespaceTree();
+const namespaces = getNamespaces();
 const totalTypes = getAllTypes().length;
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
-
-function countGroups(node: NamespaceTreeNode): Record<string, number> {
-  const counts: Record<string, number> = {};
-  function walk(n: NamespaceTreeNode) {
-    for (const t of n.types) {
-      counts[t.group] = (counts[t.group] || 0) + 1;
-    }
-    for (const c of n.children) walk(c);
-  }
-  walk(node);
-  return counts;
-}
 
 const groupColors: Record<string, string> = {
   class: "text-blue-400",
@@ -25,80 +12,43 @@ const groupColors: Record<string, string> = {
   enum: "text-purple-400",
   interface: "text-yellow-400",
 };
+
+const namespacesWithCounts = namespaces.map((ns) => {
+  const counts: Record<string, number> = {};
+  for (const t of ns.types) {
+    counts[t.group] = (counts[t.group] || 0) + 1;
+  }
+  return { ...ns, counts };
+});
 ---
 
-<DocsLayout title="API Reference">
+<DocsLayout title="API Reference" description={`Browse ${totalTypes} types across ${namespaces.length} namespaces in the s&box game engine API.`}>
   <div data-pagefind-body>
     <div class="mb-8">
       <h1 class="text-3xl font-bold text-accent mb-2">API Reference</h1>
       <p class="text-text-muted">
-        {totalTypes} types across {tree.length} top-level namespaces
+        {totalTypes} types across {namespaces.length} namespaces
       </p>
     </div>
 
-    <div class="space-y-6">
-      {tree.map((root) => {
-        const counts = countGroups(root);
-        return (
-          <div class="rounded-xl border border-border bg-surface p-5">
-            <div class="flex items-center justify-between mb-3">
-              <h2 class="text-lg font-semibold text-text">{root.name}</h2>
-              <span class="text-xs text-text-muted">{root.totalTypes} types</span>
-            </div>
-            <div class="flex flex-wrap gap-2 text-xs mb-4">
-              {Object.entries(counts).map(([group, count]) => (
-                <span class={groupColors[group] ?? "text-text-muted"}>
-                  {count} {group}{count > 1 ? (group === "class" ? "es" : "s") : ""}
-                </span>
-              ))}
-            </div>
-
-            {/* Child namespaces as sub-cards */}
-            {root.children.length > 0 && (
-              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
-                {/* Root namespace types link */}
-                {root.types.length > 0 && (
-                  <a
-                    href={`${base}/api/ns/${root.fullPath}`}
-                    class="group rounded-lg border border-border/50 bg-background px-4 py-3 hover:border-accent/50 hover:bg-surface-hover transition-all"
-                  >
-                    <div class="text-sm font-medium text-text-muted group-hover:text-accent truncate">
-                      {root.name} <span class="text-[10px] opacity-50">({root.types.length})</span>
-                    </div>
-                  </a>
-                )}
-                {root.children.map((child) => (
-                  <a
-                    href={`${base}/api/ns/${child.fullPath}`}
-                    class="group rounded-lg border border-border/50 bg-background px-4 py-3 hover:border-accent/50 hover:bg-surface-hover transition-all"
-                  >
-                    <div class="text-sm font-medium text-text-muted group-hover:text-accent truncate">
-                      {child.name} <span class="text-[10px] opacity-50">({child.totalTypes})</span>
-                    </div>
-                  </a>
-                ))}
-              </div>
-            )}
-
-            {/* Namespaces with no children - show direct type links */}
-            {root.children.length === 0 && root.types.length > 0 && (
-              <div class="flex flex-wrap gap-2">
-                {root.types.slice(0, 12).map((t) => (
-                  <a
-                    href={`${base}/api/${t.slug}`}
-                    class="rounded-md border border-border/50 bg-background px-3 py-1.5 text-xs text-text-muted hover:text-accent hover:border-accent/50 transition-all"
-                  >
-                    {t.name}
-                  </a>
-                ))}
-                {root.types.length > 12 && (
-                  <span class="px-3 py-1.5 text-xs text-text-muted">+{root.types.length - 12} more</span>
-                )}
-              </div>
-            )}
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+      {namespacesWithCounts.map((ns) => (
+        <a
+          href={`${base}/api/ns/${ns.namespace}`}
+          class="group block rounded-xl border border-border bg-surface p-5 hover:border-accent/50 hover:bg-surface-hover transition-all"
+        >
+          <h2 class="font-semibold text-text group-hover:text-accent transition-colors mb-2 truncate">
+            {ns.namespace}
+          </h2>
+          <div class="flex flex-wrap gap-2 text-xs">
+            {Object.entries(ns.counts).map(([group, count]) => (
+              <span class={groupColors[group] ?? "text-text-muted"}>
+                {count} {group}{count > 1 ? (group === "class" ? "es" : "s") : ""}
+              </span>
+            ))}
           </div>
-        );
-      })}
+        </a>
+      ))}
     </div>
   </div>
 </DocsLayout>

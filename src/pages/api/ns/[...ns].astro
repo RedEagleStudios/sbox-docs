@@ -31,7 +31,7 @@ const groups = [
 const nsParts = ns.namespace === "(global)" ? [] : ns.namespace.split(".");
 ---
 
-<DocsLayout title={ns.namespace}>
+<DocsLayout title={ns.namespace} currentNamespace={ns.namespace}>
   <div data-pagefind-body>
     <!-- Breadcrumb -->
     <div class="flex items-center gap-2 text-sm text-text-muted mb-6 flex-wrap">
