@@ -1,61 +1,162 @@
 import { useState, useMemo } from "react";
 import { TypeBadge } from "./TypeBadge";
-import type { NamespaceGroup } from "../lib/types";
+import type { NamespaceTreeNode } from "../lib/types";
 
 interface Props {
-  namespaces: NamespaceGroup[];
+  tree: NamespaceTreeNode[];
   currentSlug?: string;
   base?: string;
 }
 
-export function Sidebar({ namespaces, currentSlug, base = "" }: Props) {
+function TreeNode({
+  node,
+  currentSlug,
+  base,
+  depth,
+  filter,
+  expandedSet,
+  toggleExpanded,
+}: {
+  node: NamespaceTreeNode;
+  currentSlug?: string;
+  base: string;
+  depth: number;
+  filter: string;
+  expandedSet: Set<string>;
+  toggleExpanded: (path: string) => void;
+}) {
+  const open = filter ? true : expandedSet.has(node.fullPath);
+  const hasChildren = node.children.length > 0;
+  const hasTypes = node.types.length > 0;
+
+  return (
+    <div>
+      <button
+        onClick={() => toggleExpanded(node.fullPath)}
+        className={`flex items-center gap-1.5 w-full px-2 py-1.5 text-xs font-semibold rounded transition-colors ${
+          expandedSet.has(node.fullPath) && !filter
+            ? "text-accent bg-accent/5"
+            : "text-text-muted hover:text-text hover:bg-surface-hover"
+        }`}
+        style={{ paddingLeft: `${depth * 12 + 8}px` }}
+      >
+        {(hasChildren || hasTypes) ? (
+          <svg
+            className={`h-3 w-3 shrink-0 transition-transform ${open ? "rotate-90" : ""}`}
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+        ) : (
+          <span className="w-3 shrink-0" />
+        )}
+        <span className="truncate flex-1 text-left">{node.name}</span>
+        <span className="text-[10px] opacity-50 tabular-nums">{node.totalTypes}</span>
+      </button>
+      {open && (
+        <div>
+          {/* Child namespaces */}
+          {node.children.map((child) => (
+            <TreeNode
+              key={child.fullPath}
+              node={child}
+              currentSlug={currentSlug}
+              base={base}
+              depth={depth + 1}
+              filter={filter}
+              expandedSet={expandedSet}
+              toggleExpanded={toggleExpanded}
+            />
+          ))}
+          {/* Types in this namespace */}
+          {hasTypes && (
+            <div style={{ paddingLeft: `${(depth + 1) * 12 + 8}px` }}>
+              {node.types.map((t) => (
+                <a
+                  key={t.fullName}
+                  href={`${base}/api/${t.slug}`}
+                  className={`flex items-center gap-1.5 px-2 py-1 text-xs rounded transition-colors ${
+                    currentSlug === t.slug
+                      ? "bg-accent/20 text-accent font-medium"
+                      : "text-text-muted hover:text-text hover:bg-surface-hover"
+                  }`}
+                >
+                  <TypeBadge group={t.group} className="text-[9px] px-1 py-0" />
+                  <span className="truncate">{t.name}</span>
+                </a>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Find all ancestor paths for a given slug in the tree
+function findAncestors(nodes: NamespaceTreeNode[], slug: string): string[] {
+  for (const node of nodes) {
+    if (node.types.some((t) => t.slug === slug)) {
+      return [node.fullPath];
+    }
+    const childResult = findAncestors(node.children, slug);
+    if (childResult.length > 0) {
+      return [node.fullPath, ...childResult];
+    }
+  }
+  return [];
+}
+
+// Filter tree recursively
+function filterTree(nodes: NamespaceTreeNode[], q: string): NamespaceTreeNode[] {
+  return nodes
+    .map((node) => {
+      const filteredChildren = filterTree(node.children, q);
+      const filteredTypes = node.types.filter(
+        (t) =>
+          t.name.toLowerCase().includes(q) ||
+          t.fullName.toLowerCase().includes(q)
+      );
+      const nameMatches = node.name.toLowerCase().includes(q) || node.fullPath.toLowerCase().includes(q);
+
+      if (nameMatches) return node; // show everything if namespace matches
+      if (filteredTypes.length > 0 || filteredChildren.length > 0) {
+        return { ...node, types: filteredTypes.length > 0 ? filteredTypes : node.types, children: filteredChildren };
+      }
+      return null;
+    })
+    .filter((n): n is NamespaceTreeNode => n !== null);
+}
+
+export function Sidebar({ tree, currentSlug, base = "" }: Props) {
   const [filter, setFilter] = useState("");
 
-  // Find which namespace the current type belongs to
-  const currentNamespace = useMemo(() => {
-    if (!currentSlug) return null;
-    for (const ns of namespaces) {
-      if (ns.types.some((t) => t.slug === currentSlug)) {
-        return ns.namespace;
-      }
-    }
-    return null;
-  }, [namespaces, currentSlug]);
+  const ancestors = useMemo(() => {
+    if (!currentSlug) return new Set<string>();
+    return new Set(findAncestors(tree, currentSlug));
+  }, [tree, currentSlug]);
 
-  // Start all collapsed except the current namespace
-  const [expanded, setExpanded] = useState<Record<string, boolean>>(() => {
-    const init: Record<string, boolean> = {};
-    if (currentNamespace) {
-      init[currentNamespace] = true;
-    }
-    return init;
-  });
+  const [expanded, setExpanded] = useState<Set<string>>(() => new Set(ancestors));
+
+  const toggleExpanded = (path: string) => {
+    setExpanded((prev) => {
+      const next = new Set(prev);
+      if (next.has(path)) next.delete(path);
+      else next.add(path);
+      return next;
+    });
+  };
 
   const filtered = useMemo(() => {
     const q = filter.toLowerCase();
-    if (!q) return namespaces;
-    return namespaces
-      .map((ns) => ({
-        ...ns,
-        types: ns.types.filter(
-          (t) =>
-            t.name.toLowerCase().includes(q) ||
-            t.fullName.toLowerCase().includes(q) ||
-            ns.namespace.toLowerCase().includes(q)
-        ),
-      }))
-      .filter((ns) => ns.types.length > 0);
-  }, [namespaces, filter]);
+    if (!q) return tree;
+    return filterTree(tree, q);
+  }, [tree, filter]);
 
-  const toggle = (ns: string) => {
-    setExpanded((e) => ({ ...e, [ns]: !e[ns] }));
-  };
-
-  const isExpanded = (ns: string) => {
-    // When filtering, expand all matching namespaces
-    if (filter) return true;
-    return !!expanded[ns];
-  };
+  // Merge ancestors into expanded set
+  const expandedSet = useMemo(() => new Set([...expanded, ...ancestors]), [expanded, ancestors]);
 
   return (
     <nav className="flex flex-col h-full">
@@ -69,51 +170,18 @@ export function Sidebar({ namespaces, currentSlug, base = "" }: Props) {
         />
       </div>
       <div className="flex-1 overflow-y-auto p-2">
-        {filtered.map((ns) => {
-          const open = isExpanded(ns.namespace);
-          const isCurrentNs = ns.namespace === currentNamespace;
-          return (
-            <div key={ns.namespace} className="mb-0.5">
-              <button
-                onClick={() => toggle(ns.namespace)}
-                className={`flex items-center gap-1.5 w-full px-2 py-1.5 text-xs font-semibold rounded transition-colors ${
-                  isCurrentNs
-                    ? "text-accent bg-accent/5"
-                    : "text-text-muted hover:text-text hover:bg-surface-hover"
-                }`}
-              >
-                <svg
-                  className={`h-3 w-3 shrink-0 transition-transform ${open ? "rotate-90" : ""}`}
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-                <span className="truncate flex-1 text-left">{ns.namespace}</span>
-                <span className="text-[10px] opacity-50 tabular-nums">{ns.types.length}</span>
-              </button>
-              {open && (
-                <div className="ml-3 pl-2 border-l border-border/50">
-                  {ns.types.map((t) => (
-                    <a
-                      key={t.fullName}
-                      href={`${base}/api/${t.slug}`}
-                      className={`flex items-center gap-1.5 px-2 py-1 text-xs rounded transition-colors ${
-                        currentSlug === t.slug
-                          ? "bg-accent/20 text-accent font-medium"
-                          : "text-text-muted hover:text-text hover:bg-surface-hover"
-                      }`}
-                    >
-                      <TypeBadge group={t.group} className="text-[9px] px-1 py-0" />
-                      <span className="truncate">{t.name}</span>
-                    </a>
-                  ))}
-                </div>
-              )}
-            </div>
-          );
-        })}
+        {filtered.map((node) => (
+          <TreeNode
+            key={node.fullPath}
+            node={node}
+            currentSlug={currentSlug}
+            base={base}
+            depth={0}
+            filter={filter}
+            expandedSet={expandedSet}
+            toggleExpanded={toggleExpanded}
+          />
+        ))}
       </div>
     </nav>
   );

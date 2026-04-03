@@ -1,4 +1,4 @@
-import type { ApiData, ApiType, NamespaceGroup, NavItem } from "./types";
+import type { ApiData, ApiType, NamespaceGroup, NamespaceTreeNode, NavItem } from "./types";
 import rawData from "../../api-data.json";
 
 const data = rawData as ApiData;
@@ -87,6 +87,59 @@ export function resolveType(typeStr: string): { display: string; href?: string }
 
   const href = typeLink(typeStr);
   return { display, href };
+}
+
+export function getNamespaceTree(): NamespaceTreeNode[] {
+  const flat = getNamespaces();
+  const nsMap = new Map<string, NamespaceGroup>();
+  for (const ns of flat) nsMap.set(ns.namespace, ns);
+
+  // Build tree by grouping on dot-separated segments
+  const rootNodes: NamespaceTreeNode[] = [];
+  const nodeMap = new Map<string, NamespaceTreeNode>();
+
+  // Sort so parents come before children
+  const sorted = [...nsMap.keys()].sort();
+
+  for (const fullPath of sorted) {
+    const ns = nsMap.get(fullPath)!;
+    const parts = fullPath.split(".");
+    const name = parts[parts.length - 1];
+
+    const node: NamespaceTreeNode = {
+      name,
+      fullPath,
+      types: ns.types,
+      children: [],
+      totalTypes: ns.types.length,
+    };
+    nodeMap.set(fullPath, node);
+
+    // Find parent: walk up the parts
+    let placed = false;
+    for (let i = parts.length - 1; i > 0; i--) {
+      const parentPath = parts.slice(0, i).join(".");
+      const parent = nodeMap.get(parentPath);
+      if (parent) {
+        parent.children.push(node);
+        placed = true;
+        break;
+      }
+    }
+
+    if (!placed) {
+      rootNodes.push(node);
+    }
+  }
+
+  // Calculate totalTypes recursively
+  function calcTotal(node: NamespaceTreeNode): number {
+    node.totalTypes = node.types.length + node.children.reduce((sum, c) => sum + calcTotal(c), 0);
+    return node.totalTypes;
+  }
+  for (const root of rootNodes) calcTotal(root);
+
+  return rootNodes;
 }
 
 /** Strip XML tags from documentation summaries for plain text */

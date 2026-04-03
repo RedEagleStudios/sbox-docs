@@ -2,7 +2,7 @@
 import "../styles/globals.css";
 import { Sidebar } from "../components/Sidebar";
 import { Search } from "../components/Search";
-import { getNamespaces } from "../lib/api-data";
+import { getNamespaceTree } from "../lib/api-data";
 
 interface Props {
   title: string;
@@ -10,7 +10,7 @@ interface Props {
 }
 
 const { title, currentSlug } = Astro.props;
-const namespaces = getNamespaces();
+const tree = getNamespaceTree();
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 ---
 
@@ -65,7 +65,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, "");
         id="sidebar"
         class="fixed lg:sticky top-14 z-30 flex flex-col w-72 border-r border-border bg-background h-[calc(100vh-3.5rem)] shrink-0 -translate-x-full lg:translate-x-0 transition-transform"
       >
-        <Sidebar client:idle namespaces={namespaces} currentSlug={currentSlug} base={base} />
+        <Sidebar client:idle tree={tree} currentSlug={currentSlug} base={base} />
       </aside>
 
       <!-- Main content -->

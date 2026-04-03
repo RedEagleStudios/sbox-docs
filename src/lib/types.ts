@@ -123,3 +123,11 @@ export interface NamespaceGroup {
   namespace: string;
   types: NavItem[];
 }
+
+export interface NamespaceTreeNode {
+  name: string;
+  fullPath: string;
+  types: NavItem[];
+  children: NamespaceTreeNode[];
+  totalTypes: number;
+}
