@@ -3,6 +3,16 @@ import DocsLayout from "../../layouts/DocsLayout.astro";
 import { TypeBadge } from "../../components/TypeBadge";
 import { getAllTypes, fullNameToSlug, typeLink, namespaceLink, resolveType, stripXml } from "../../lib/api-data";
 import type { ApiType } from "../../lib/types";
+import { createHighlighter } from "shiki";
+
+const highlighter = await createHighlighter({
+  themes: ["github-dark"],
+  langs: ["csharp"],
+});
+
+function highlightCode(code: string): string {
+  return highlighter.codeToHtml(code, { lang: "csharp", theme: "github-dark" });
+}
 
 export function getStaticPaths() {
   return getAllTypes().map((type) => ({
@@ -338,9 +348,12 @@ const seeAlso = type.Documentation?.SeeAlso ?? [];
     <section class="mb-8">
       <h2 class="text-xl font-semibold text-text mb-4 border-b border-border pb-2">Examples</h2>
       <div class="space-y-3">
-        {examples.map((ex) => (
-          <pre class="rounded-lg border border-border bg-surface p-4 overflow-x-auto text-sm"><code>{stripXml(ex)}</code></pre>
-        ))}
+        {examples.map((ex) => {
+          const code = stripXml(ex).trim();
+          return (
+            <div class="rounded-lg border border-border overflow-hidden [&_pre]:!p-4 [&_pre]:!m-0 [&_pre]:!rounded-none [&_pre]:text-sm" set:html={highlightCode(code)} />
+          );
+        })}
       </div>
     </section>
   )}

@@ -84,13 +84,57 @@ export function getAllSlugs(): string[] {
 
 /** Parse a type string and return display name + optional link */
 export function resolveType(typeStr: string): { display: string; href?: string } {
-  // Strip common System prefixes for display
-  // Just show the short type name — strip all namespace/parent prefixes
-  const parts = typeStr.split(".");
-  const display = parts[parts.length - 1] || typeStr;
-
+  const display = formatTypeName(typeStr);
   const href = typeLink(typeStr);
   return { display, href };
+}
+
+/** Format a .NET type string into a readable short name */
+function formatTypeName(typeStr: string): string {
+  // Handle generic types like System.Nullable`1<System.Single>
+  const genericMatch = typeStr.match(/^(.+)`\d+<(.+)>$/);
+  if (genericMatch) {
+    const outerName = shortName(genericMatch[1]);
+    const innerTypes = splitGenericArgs(genericMatch[2]);
+    const innerDisplay = innerTypes.map(formatTypeName).join(", ");
+    // Special case: Nullable -> Type?
+    if (genericMatch[1].endsWith("Nullable")) {
+      return `${innerDisplay}?`;
+    }
+    return `${outerName}<${innerDisplay}>`;
+  }
+
+  // Handle arrays
+  if (typeStr.endsWith("[]")) {
+    return formatTypeName(typeStr.slice(0, -2)) + "[]";
+  }
+
+  return shortName(typeStr);
+}
+
+/** Get short name from a fully qualified name (no generics) */
+function shortName(fullName: string): string {
+  const parts = fullName.split(".");
+  return parts[parts.length - 1] || fullName;
+}
+
+/** Split generic args handling nested generics */
+function splitGenericArgs(args: string): string[] {
+  const result: string[] = [];
+  let depth = 0;
+  let current = "";
+  for (const ch of args) {
+    if (ch === "<") depth++;
+    else if (ch === ">") depth--;
+    if (ch === "," && depth === 0) {
+      result.push(current.trim());
+      current = "";
+    } else {
+      current += ch;
+    }
+  }
+  if (current.trim()) result.push(current.trim());
+  return result;
 }
 
 export function getNamespaceTree(): NamespaceTreeNode[] {
