@@ -31,30 +31,41 @@ function TreeNode({
 
   return (
     <div>
-      <button
-        onClick={() => toggleExpanded(node.fullPath)}
-        className={`flex items-center gap-1.5 w-full px-2 py-1.5 text-xs font-semibold rounded transition-colors ${
+      <div
+        className={`flex items-center gap-0.5 py-1 text-xs font-semibold rounded transition-colors ${
           expandedSet.has(node.fullPath) && !filter
             ? "text-accent bg-accent/5"
-            : "text-text-muted hover:text-text hover:bg-surface-hover"
+            : "text-text-muted hover:text-text"
         }`}
         style={{ paddingLeft: `${depth * 12 + 8}px` }}
       >
-        {(hasChildren || hasTypes) ? (
-          <svg
-            className={`h-3 w-3 shrink-0 transition-transform ${open ? "rotate-90" : ""}`}
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-          </svg>
-        ) : (
-          <span className="w-3 shrink-0" />
-        )}
-        <span className="truncate flex-1 text-left">{node.name}</span>
-        <span className="text-[10px] opacity-50 tabular-nums">{node.totalTypes}</span>
-      </button>
+        {/* Chevron toggle */}
+        <button
+          onClick={(e) => { e.stopPropagation(); toggleExpanded(node.fullPath); }}
+          className="p-0.5 rounded hover:bg-surface-hover transition-colors shrink-0"
+        >
+          {(hasChildren || hasTypes) ? (
+            <svg
+              className={`h-3 w-3 transition-transform ${open ? "rotate-90" : ""}`}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          ) : (
+            <span className="w-3 h-3 block" />
+          )}
+        </button>
+        {/* Namespace link */}
+        <a
+          href={`${base}/api/ns/${node.fullPath}`}
+          className="truncate flex-1 px-1 rounded hover:bg-surface-hover transition-colors"
+        >
+          {node.name}
+        </a>
+        <span className="text-[10px] opacity-50 tabular-nums pr-2">{node.totalTypes}</span>
+      </div>
       {open && (
         <div>
           {/* Child namespaces */}

@@ -59,7 +59,7 @@ const groupColors: Record<string, string> = {
                 {/* Root namespace types link */}
                 {root.types.length > 0 && (
                   <a
-                    href={`${base}/api/${root.types[0].slug}`}
+                    href={`${base}/api/ns/${root.fullPath}`}
                     class="group rounded-lg border border-border/50 bg-background px-4 py-3 hover:border-accent/50 hover:bg-surface-hover transition-all"
                   >
                     <div class="text-sm font-medium text-text-muted group-hover:text-accent truncate">
@@ -69,7 +69,7 @@ const groupColors: Record<string, string> = {
                 )}
                 {root.children.map((child) => (
                   <a
-                    href={`${base}/api/${child.types[0]?.slug ?? child.children[0]?.types[0]?.slug}`}
+                    href={`${base}/api/ns/${child.fullPath}`}
                     class="group rounded-lg border border-border/50 bg-background px-4 py-3 hover:border-accent/50 hover:bg-surface-hover transition-all"
                   >
                     <div class="text-sm font-medium text-text-muted group-hover:text-accent truncate">

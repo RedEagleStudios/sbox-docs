@@ -46,6 +46,11 @@ export function typeLink(fullName: string): string | undefined {
   return undefined;
 }
 
+export function namespaceLink(ns: string): string {
+  const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+  return `${base}/api/ns/${ns}`;
+}
+
 export function getNamespaces(): NamespaceGroup[] {
   const nsMap = new Map<string, NavItem[]>();
 
@@ -80,10 +85,9 @@ export function getAllSlugs(): string[] {
 /** Parse a type string and return display name + optional link */
 export function resolveType(typeStr: string): { display: string; href?: string } {
   // Strip common System prefixes for display
-  const display = typeStr
-    .replace(/^System\.Collections\.Generic\./, "")
-    .replace(/^System\./, "")
-    .replace(/^Sandbox\./, "");
+  // Just show the short type name — strip all namespace/parent prefixes
+  const parts = typeStr.split(".");
+  const display = parts[parts.length - 1] || typeStr;
 
   const href = typeLink(typeStr);
   return { display, href };

@@ -1,0 +1,86 @@
+---
+import DocsLayout from "../../../layouts/DocsLayout.astro";
+import { TypeBadge } from "../../../components/TypeBadge";
+import { getNamespaces, namespaceLink, resolveType } from "../../../lib/api-data";
+import type { NamespaceGroup } from "../../../lib/types";
+
+export function getStaticPaths() {
+  const namespaces = getNamespaces();
+  return namespaces.map((ns) => ({
+    params: { ns: ns.namespace },
+    props: { ns },
+  }));
+}
+
+interface Props {
+  ns: NamespaceGroup;
+}
+
+const { ns } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+
+// Group types by kind
+const groups = [
+  { label: "Classes", types: ns.types.filter((t) => t.group === "class") },
+  { label: "Structs", types: ns.types.filter((t) => t.group === "struct") },
+  { label: "Enums", types: ns.types.filter((t) => t.group === "enum") },
+  { label: "Interfaces", types: ns.types.filter((t) => t.group === "interface") },
+].filter((g) => g.types.length > 0);
+
+// Build breadcrumb parts
+const nsParts = ns.namespace === "(global)" ? [] : ns.namespace.split(".");
+---
+
+<DocsLayout title={ns.namespace}>
+  <div data-pagefind-body>
+    <!-- Breadcrumb -->
+    <div class="flex items-center gap-2 text-sm text-text-muted mb-6 flex-wrap">
+      <a href={`${base}/api/`} class="hover:text-accent transition-colors">Api</a>
+      {nsParts.map((part, i) => {
+        const path = nsParts.slice(0, i + 1).join(".");
+        const isLast = i === nsParts.length - 1;
+        return (
+          <>
+            <span>&rsaquo;</span>
+            {isLast ? (
+              <span class="text-text">{part}</span>
+            ) : (
+              <a href={namespaceLink(path)} class="hover:text-accent transition-colors">{part}</a>
+            )}
+          </>
+        );
+      })}
+    </div>
+
+    <!-- Header -->
+    <div class="mb-8">
+      <div class="flex items-center gap-3 mb-2">
+        <span class="inline-flex items-center rounded-md border border-blue-500/30 bg-blue-500/10 px-2.5 py-0.5 text-xs font-medium text-blue-400">
+          namespace
+        </span>
+        <h1 class="text-3xl font-bold text-accent">{ns.namespace}</h1>
+      </div>
+      <p class="text-text-muted">
+        {ns.types.length} type{ns.types.length !== 1 ? "s" : ""}
+      </p>
+    </div>
+
+    <!-- Type groups -->
+    {groups.map((group) => (
+      <section class="mb-8">
+        <h2 class="text-xl font-semibold text-text mb-4 border-b border-border pb-2">{group.label}</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          {group.types.map((t) => (
+            <a
+              href={`${base}/api/${t.slug}`}
+              class="flex items-center gap-2 rounded-lg border border-border bg-surface px-4 py-3 hover:border-accent/50 hover:bg-surface-hover transition-all"
+            >
+              <TypeBadge group={t.group} className="text-[9px] px-1 py-0" />
+              <span class="text-sm text-text hover:text-accent truncate">{t.name}</span>
+            </a>
+          ))}
+        </div>
+      </section>
+    ))}
+  </div>
+</DocsLayout>

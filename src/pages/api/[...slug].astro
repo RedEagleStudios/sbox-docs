@@ -1,7 +1,7 @@
 ---
 import DocsLayout from "../../layouts/DocsLayout.astro";
 import { TypeBadge } from "../../components/TypeBadge";
-import { getAllTypes, fullNameToSlug, typeLink, resolveType, stripXml } from "../../lib/api-data";
+import { getAllTypes, fullNameToSlug, typeLink, namespaceLink, resolveType, stripXml } from "../../lib/api-data";
 import type { ApiType, Method, Property, Field, Constructor } from "../../lib/types";
 
 export function getStaticPaths() {
@@ -43,15 +43,18 @@ function formatParams(params?: { Name: string; Type: string }[]): string {
 <DocsLayout title={type.Name} currentSlug={slug}>
   <div data-pagefind-body>
   <!-- Breadcrumb -->
-  <div class="flex items-center gap-2 text-sm text-text-muted mb-6">
+  <div class="flex items-center gap-2 text-sm text-text-muted mb-6 flex-wrap">
     <a href={`${import.meta.env.BASE_URL.replace(/\/$/, "")}/api/`} class="hover:text-accent transition-colors">Api</a>
+    {type.Namespace && type.Namespace.split(".").map((part, i, arr) => {
+      const path = arr.slice(0, i + 1).join(".");
+      return (
+        <>
+          <span>&rsaquo;</span>
+          <a href={namespaceLink(path)} class="hover:text-accent transition-colors">{part}</a>
+        </>
+      );
+    })}
     <span>&rsaquo;</span>
-    {type.Namespace && (
-      <>
-        <span>{type.Namespace}</span>
-        <span>&rsaquo;</span>
-      </>
-    )}
     <span class="text-text">{type.Name}</span>
   </div>
 
@@ -86,9 +89,15 @@ function formatParams(params?: { Name: string; Type: string }[]): string {
       <div class="space-y-3">
         {constructors.map((c) => (
           <div class="rounded-lg border border-border bg-surface p-4">
-            <code class="text-sm text-accent">
-              {type.Name}{formatParams(c.Parameters)}
-            </code>
+            <code class="text-sm"><!--
+              --><span class="syn-name">{type.Name}</span><!--
+              --><span class="syn-punct">(</span><!--
+              -->{c.Parameters?.map((p, i) => {
+                const resolved = resolveType(p.Type);
+                return <>{i > 0 && <span class="syn-punct">, </span>}{resolved.href ? <a href={resolved.href} class="syn-type-link hover:underline">{resolved.display}</a> : <span class="syn-type">{resolved.display}</span>}{" "}<span class="syn-param">{p.Name}</span></>;
+              })}<!--
+              --><span class="syn-punct">)</span><!--
+            --></code>
             {c.Documentation?.Summary && (
               <p class="mt-2 text-sm text-text-muted">{stripXml(c.Documentation.Summary)}</p>
             )}
@@ -117,15 +126,17 @@ function formatParams(params?: { Name: string; Type: string }[]): string {
               return (
                 <tr class="border-b border-border/50 hover:bg-surface-hover transition-colors">
                   <td class="py-2.5 pr-4">
-                    <code class="text-accent text-xs">{p.Name}</code>
-                    {p.IsStatic && <span class="ml-1 text-[10px] text-yellow-400">static</span>}
+                    <code class="text-xs"><span class="syn-name">{p.Name}</span></code>
+                    {p.IsStatic && <span class="ml-1 text-[10px] syn-keyword">static</span>}
                   </td>
                   <td class="py-2.5 pr-4">
-                    {resolved.href ? (
-                      <a href={resolved.href} class="text-xs text-blue-400 hover:underline">{resolved.display}</a>
-                    ) : (
-                      <span class="text-xs text-text-muted">{resolved.display}</span>
-                    )}
+                    <code class="text-xs border-0 bg-transparent p-0">
+                      {resolved.href ? (
+                        <a href={resolved.href} class="syn-type-link hover:underline">{resolved.display}</a>
+                      ) : (
+                        <span class="syn-type">{resolved.display}</span>
+                      )}
+                    </code>
                   </td>
                   <td class="py-2.5 text-text-muted text-xs">
                     {p.Documentation?.Summary ? stripXml(p.Documentation.Summary) : ""}
@@ -148,16 +159,17 @@ function formatParams(params?: { Name: string; Type: string }[]): string {
           const ret = resolveType(m.ReturnType);
           return (
             <div class="rounded-lg border border-border bg-surface p-4">
-              <div class="flex flex-wrap items-center gap-2">
-                {ret.href ? (
-                  <a href={ret.href} class="text-xs text-blue-400 hover:underline">{ret.display}</a>
-                ) : (
-                  <span class="text-xs text-text-muted">{ret.display}</span>
-                )}
-                <code class="text-sm text-accent">{m.Name}</code>
-                <code class="text-xs text-text-muted">{formatParams(m.Parameters)}</code>
-                {m.IsStatic && <span class="text-[10px] text-yellow-400 border border-yellow-400/30 rounded px-1">static</span>}
-              </div>
+              <code class="text-sm"><!--
+                -->{m.IsStatic && <><span class="syn-keyword">static</span>{" "}</>}<!--
+                -->{ret.href ? <a href={ret.href} class="syn-type-link hover:underline">{ret.display}</a> : <span class="syn-type">{ret.display}</span>}<!--
+                -->{" "}<span class="syn-name">{m.Name}</span><!--
+                --><span class="syn-punct">(</span><!--
+                -->{m.Parameters?.map((p, i) => {
+                  const resolved = resolveType(p.Type);
+                  return <>{i > 0 && <span class="syn-punct">, </span>}{resolved.href ? <a href={resolved.href} class="syn-type-link hover:underline">{resolved.display}</a> : <span class="syn-type">{resolved.display}</span>}{" "}<span class="syn-param">{p.Name}</span></>;
+                })}<!--
+                --><span class="syn-punct">)</span><!--
+              --></code>
               {m.Documentation?.Summary && (
                 <p class="mt-2 text-sm text-text-muted">{stripXml(m.Documentation.Summary)}</p>
               )}
@@ -165,7 +177,7 @@ function formatParams(params?: { Name: string; Type: string }[]): string {
                 <div class="mt-2 pl-4 border-l-2 border-border">
                   {m.Parameters.map((param) => (
                     <div class="text-xs text-text-muted py-0.5">
-                      <code class="text-text">{param.Name}</code>
+                      <code class="syn-param">{param.Name}</code>
                       {m.Documentation?.Params?.[param.Name] && (
                         <span> — {stripXml(m.Documentation.Params[param.Name])}</span>
                       )}
@@ -202,22 +214,26 @@ function formatParams(params?: { Name: string; Type: string }[]): string {
               return (
                 <tr class="border-b border-border/50 hover:bg-surface-hover transition-colors">
                   <td class="py-2.5 pr-4">
-                    <code class="text-accent text-xs">{f.Name}</code>
-                    {f.IsStatic && !type.IsEnum && <span class="ml-1 text-[10px] text-yellow-400">static</span>}
-                    {f.IsConst && <span class="ml-1 text-[10px] text-purple-400">const</span>}
+                    <code class="text-xs"><span class="syn-name">{f.Name}</span></code>
+                    {f.IsStatic && !type.IsEnum && <span class="ml-1 text-[10px] syn-keyword">static</span>}
+                    {f.IsConst && <span class="ml-1 text-[10px] syn-keyword">const</span>}
                   </td>
                   {!type.IsEnum && (
                     <td class="py-2.5 pr-4">
-                      {resolved?.href ? (
-                        <a href={resolved.href} class="text-xs text-blue-400 hover:underline">{resolved.display}</a>
-                      ) : (
-                        <span class="text-xs text-text-muted">{resolved?.display}</span>
-                      )}
+                      <code class="text-xs border-0 bg-transparent p-0">
+                        {resolved?.href ? (
+                          <a href={resolved.href} class="syn-type-link hover:underline">{resolved.display}</a>
+                        ) : (
+                          <span class="syn-type">{resolved?.display}</span>
+                        )}
+                      </code>
                     </td>
                   )}
                   {type.IsEnum && (
-                    <td class="py-2.5 pr-4 text-xs text-text-muted">
-                      {f.ConstantValue !== undefined ? String(f.ConstantValue) : ""}
+                    <td class="py-2.5 pr-4">
+                      <code class="text-xs border-0 bg-transparent p-0 syn-string">
+                        {f.ConstantValue !== undefined ? String(f.ConstantValue) : ""}
+                      </code>
                     </td>
                   )}
                   <td class="py-2.5 text-text-muted text-xs">
