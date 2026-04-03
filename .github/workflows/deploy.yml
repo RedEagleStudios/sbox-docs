@@ -57,16 +57,13 @@ jobs:
             echo "skip=false" >> "$GITHUB_OUTPUT"
           fi
 
-      - uses: actions/setup-node@v4
-        if: steps.check.outputs.skip != 'true'
-        with:
-          node-version: 22
-          cache: npm
-
-      - run: npm ci
+      - uses: oven-sh/setup-bun@v2
         if: steps.check.outputs.skip != 'true'
 
-      - run: npm run build
+      - run: bun install --frozen-lockfile
+        if: steps.check.outputs.skip != 'true'
+
+      - run: bun run build
         if: steps.check.outputs.skip != 'true'
 
       - uses: actions/upload-pages-artifact@v3
