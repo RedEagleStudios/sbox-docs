@@ -65,6 +65,14 @@ jobs:
       - uses: oven-sh/setup-bun@v2
         if: steps.check.outputs.skip != 'true'
 
+      - name: Cache bun dependencies
+        if: steps.check.outputs.skip != 'true'
+        uses: actions/cache@v4
+        with:
+          path: ~/.bun/install/cache
+          key: bun-${{ hashFiles('bun.lock') }}
+          restore-keys: bun-
+
       - run: bun install --frozen-lockfile
         if: steps.check.outputs.skip != 'true'
 
