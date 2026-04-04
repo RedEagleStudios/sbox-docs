@@ -3,3 +3,6 @@ dist/
 .astro/
 .claude/
 api-data.json
+guides-raw.json
+doc-tree.json
+guides-data.json
