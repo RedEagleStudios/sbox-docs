@@ -1,0 +1,56 @@
+---
+import GuidesLayout from "../../layouts/GuidesLayout.astro";
+import { getCollection, render } from "astro:content";
+
+export async function getStaticPaths() {
+  const guides = await getCollection("guides");
+  return guides.map((guide) => ({
+    params: { slug: guide.data.slug },
+    props: { guide },
+  }));
+}
+
+const { guide } = Astro.props;
+const { Content } = await render(guide);
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+
+const breadcrumbParts = guide.data.slug.split("/");
+---
+
+<GuidesLayout title={guide.data.title} currentSlug={guide.data.slug}>
+  <div data-pagefind-body>
+    <!-- Breadcrumb -->
+    <div class="flex items-center gap-2 text-sm text-text-muted mb-6 flex-wrap">
+      <a href={`${base}/guides/`} class="hover:text-accent transition-colors">Guides</a>
+      {breadcrumbParts.map((part, i) => {
+        const isLast = i === breadcrumbParts.length - 1;
+        const path = breadcrumbParts.slice(0, i + 1).join("/");
+        const label = part.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+        return (
+          <>
+            <span>&rsaquo;</span>
+            {isLast ? (
+              <span class="text-text">{guide.data.title || label}</span>
+            ) : (
+              <a href={`${base}/guides/${path}`} class="hover:text-accent transition-colors">{label}</a>
+            )}
+          </>
+        );
+      })}
+    </div>
+
+    <!-- Guide content -->
+    <article class="prose prose-invert max-w-none">
+      <Content />
+    </article>
+
+    <!-- Source link -->
+    {guide.data.source && (
+      <div class="mt-12 pt-4 border-t border-border text-xs text-text-muted">
+        <a href={guide.data.source} class="hover:text-accent transition-colors" target="_blank" rel="noopener">
+          View original on sbox.game
+        </a>
+      </div>
+    )}
+  </div>
+</GuidesLayout>

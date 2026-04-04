@@ -69,3 +69,27 @@ pre code {
 .syn-punct { color: #abb2bf; }
 .syn-modifier { color: #c678dd; }
 .syn-string { color: #98c379; }
+
+/* Prose styles for markdown guide content */
+.prose {
+  color: var(--color-text);
+  line-height: 1.75;
+}
+.prose h1 { font-size: 2rem; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem; color: var(--color-accent); }
+.prose h2 { font-size: 1.5rem; font-weight: 600; margin-top: 2rem; margin-bottom: 0.75rem; color: var(--color-text); border-bottom: 1px solid var(--color-border); padding-bottom: 0.5rem; }
+.prose h3 { font-size: 1.25rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.5rem; color: var(--color-text); }
+.prose h4 { font-size: 1.1rem; font-weight: 600; margin-top: 1.25rem; margin-bottom: 0.5rem; color: var(--color-text); }
+.prose p { margin-bottom: 1rem; }
+.prose a { color: var(--color-accent); text-decoration: none; }
+.prose a:hover { text-decoration: underline; }
+.prose ul, .prose ol { margin-bottom: 1rem; padding-left: 1.5rem; }
+.prose li { margin-bottom: 0.25rem; }
+.prose ul li { list-style-type: disc; }
+.prose ol li { list-style-type: decimal; }
+.prose img { max-width: 100%; border-radius: 0.5rem; border: 1px solid var(--color-border); margin: 1rem 0; }
+.prose pre { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 0.5rem; padding: 1rem; overflow-x: auto; margin: 1rem 0; }
+.prose table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.875rem; }
+.prose th, .prose td { border: 1px solid var(--color-border); padding: 0.5rem 0.75rem; text-align: left; }
+.prose th { background: var(--color-surface); font-weight: 600; }
+.prose blockquote { border-left: 3px solid var(--color-accent); padding-left: 1rem; margin: 1rem 0; color: var(--color-text-muted); }
+.prose hr { border: none; border-top: 1px solid var(--color-border); margin: 2rem 0; }

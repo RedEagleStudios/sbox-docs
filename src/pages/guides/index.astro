@@ -1,0 +1,53 @@
+---
+import GuidesLayout from "../../layouts/GuidesLayout.astro";
+import { getCollection } from "astro:content";
+import { getCategoryMeta } from "../../lib/guides-data";
+
+const allGuides = await getCollection("guides");
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+
+// Group by category
+const categories = new Map<string, { count: number; firstSlug: string }>();
+for (const guide of allGuides) {
+  const cat = guide.data.category;
+  if (!categories.has(cat)) {
+    categories.set(cat, { count: 0, firstSlug: guide.data.slug });
+  }
+  categories.get(cat)!.count++;
+}
+
+const categoryOrder = ["about", "code", "systems", "scene", "editor", "assets"];
+const sortedCategories = [...categories.entries()].sort(
+  (a, b) => categoryOrder.indexOf(a[0]) - categoryOrder.indexOf(b[0])
+);
+---
+
+<GuidesLayout title="Guides" description="Tutorials and guides for s&box game development.">
+  <div data-pagefind-body>
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-accent mb-2">Guides</h1>
+      <p class="text-text-muted">
+        {allGuides.length} guides across {categories.size} categories
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      {sortedCategories.map(([cat, info]) => {
+        const meta = getCategoryMeta(cat);
+        return (
+          <a
+            href={`${base}/guides/${info.firstSlug}`}
+            class="group block rounded-xl border border-border bg-surface p-5 hover:border-accent/50 hover:bg-surface-hover transition-all"
+          >
+            <h2 class="text-lg font-semibold text-text group-hover:text-accent transition-colors mb-2">
+              {meta.label}
+            </h2>
+            <p class="text-sm text-text-muted">
+              {info.count} guide{info.count !== 1 ? "s" : ""}
+            </p>
+          </a>
+        );
+      })}
+    </div>
+  </div>
+</GuidesLayout>
