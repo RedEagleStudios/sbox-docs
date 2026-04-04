@@ -9,7 +9,12 @@ import tailwindcss from '@tailwindcss/vite';
 // https://astro.build/config
 export default defineConfig({
   site: 'https://sbox.redeaglestudios.org',
-  integrations: [react(), sitemap(), icon()],
+  integrations: [react(), sitemap({
+    customPages: [
+      'https://sbox.redeaglestudios.org/llms.txt',
+      'https://sbox.redeaglestudios.org/llms-full.txt',
+    ],
+  }), icon()],
 
   vite: {
     plugins: [tailwindcss()],
