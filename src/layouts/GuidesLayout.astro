@@ -21,13 +21,15 @@ const pageTitle = `${title} - s&box Guides`;
 const pageDescription = description || `${title} - s&box development guides`;
 
 const allGuides = await getCollection("guides");
-const guideEntries = allGuides.map((g) => ({
-  id: g.id,
-  slug: g.data.slug,
-  title: g.data.title,
-  category: g.data.category,
-  order: g.data.order,
-}));
+const guideEntries = allGuides
+  .filter((g) => g.data.slug !== "index")
+  .map((g) => ({
+    id: g.id,
+    slug: g.data.slug,
+    title: g.data.title,
+    category: g.data.category,
+    order: g.data.order,
+  }));
 const tree = buildGuideTree(guideEntries);
 ---
 
