@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import type { GuideTreeNode } from "../lib/guides-data";
+import type { GuideTreeNode } from "../lib/doc-data";
 
 interface Props {
   tree: GuideTreeNode[];
@@ -56,7 +56,7 @@ function TreeNode({
         )}
         {hasGuide ? (
           <a
-            href={`${base}/guides/${node.slug}`}
+            href={`${base}/doc/${node.slug}`}
             className="truncate flex-1 px-1 rounded hover:bg-surface-hover transition-colors"
           >
             {node.name}

@@ -13,13 +13,13 @@
 //   3. Run this script:
 //      node scripts/scrape-guides.mjs
 //
-// Output: src/content/guides/**/*.md
+// Output: src/content/doc/**/*.md
 
 import puppeteer from "puppeteer";
 import { writeFileSync, mkdirSync, existsSync, rmSync } from "fs";
 import { dirname, join } from "path";
 
-const OUT_DIR = "src/content/guides";
+const OUT_DIR = "src/content/doc";
 const CDP_URL = "http://127.0.0.1:9222";
 
 // All known doc page URLs
@@ -130,7 +130,7 @@ function htmlToMd(html) {
       const t = stripTags(text).trim();
       if (!t) return "";
       if (href.startsWith("/dev/doc/")) {
-        return `[${t}](/guides/${href.replace("/dev/doc/", "").replace(/\/$/, "")})`;
+        return `[${t}](/doc/${href.replace("/dev/doc/", "").replace(/\/$/, "")})`;
       }
       if (href.startsWith("/")) return `[${t}](https://sbox.game${href})`;
       return `[${t}](${href})`;

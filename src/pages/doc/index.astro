@@ -1,0 +1,66 @@
+---
+import GuidesLayout from "../../layouts/GuidesLayout.astro";
+import { Icon } from "astro-icon/components";
+import { getCollection, render } from "astro:content";
+import { getCategoryMeta } from "../../lib/doc-data";
+
+const allGuides = await getCollection("guides");
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+
+// Find and render the index guide
+const indexGuide = allGuides.find((g) => g.data.slug === "index");
+const IndexContent = indexGuide ? (await render(indexGuide)).Content : null;
+
+// Group by category (exclude the index entry)
+const categories = new Map<string, { count: number; firstSlug: string }>();
+for (const guide of allGuides) {
+  if (guide.data.slug === "index") continue;
+  const cat = guide.data.category;
+  if (!categories.has(cat)) {
+    categories.set(cat, { count: 0, firstSlug: guide.data.slug });
+  }
+  categories.get(cat)!.count++;
+}
+
+const categoryOrder = ["about", "code", "systems", "scene", "editor", "assets"];
+const sortedCategories = [...categories.entries()].sort(
+  (a, b) => categoryOrder.indexOf(a[0]) - categoryOrder.indexOf(b[0])
+);
+---
+
+<GuidesLayout title="Guides" description="Tutorials and guides for s&box game development.">
+  <div data-pagefind-body>
+    <a href={`${base}/`} class="inline-flex items-center gap-1 text-sm text-text-muted hover:text-accent transition-colors mb-6">
+      <Icon name="lucide:chevron-left" class="h-4 w-4" />
+      Home
+    </a>
+
+    <h1 class="text-3xl font-bold text-accent mb-6">Guides</h1>
+
+    {IndexContent && (
+      <article class="prose prose-invert max-w-none mb-10">
+        <IndexContent />
+      </article>
+    )}
+
+    <h2 class="text-xl font-semibold text-text mb-4 border-b border-border pb-2">Categories</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      {sortedCategories.map(([cat, info]) => {
+        const meta = getCategoryMeta(cat);
+        return (
+          <a
+            href={`${base}/doc/${cat}`}
+            class="group block rounded-xl border border-border bg-surface p-5 hover:border-accent/50 hover:bg-surface-hover transition-all"
+          >
+            <h3 class="text-lg font-semibold text-text group-hover:text-accent transition-colors mb-2">
+              {meta.label}
+            </h3>
+            <p class="text-sm text-text-muted">
+              {info.count} guide{info.count !== 1 ? "s" : ""}
+            </p>
+          </a>
+        );
+      })}
+    </div>
+  </div>
+</GuidesLayout>

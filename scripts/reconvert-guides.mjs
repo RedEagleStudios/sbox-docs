@@ -9,7 +9,7 @@ import { readFileSync, writeFileSync, mkdirSync, existsSync } from "fs";
 import { dirname, join } from "path";
 
 const RAW = "guides-raw.json";
-const OUT = "src/content/guides";
+const OUT = "src/content/doc";
 
 if (!existsSync(RAW)) {
   console.error("guides-raw.json not found. Run the scraper first.");
@@ -37,7 +37,7 @@ function htmlToMd(html) {
       const t = stripTags(text).trim();
       if (!t) return "";
       if (href.startsWith("/dev/doc/")) {
-        return `[${t}](/guides/${href.replace("/dev/doc/", "").replace(/\/$/, "")})`;
+        return `[${t}](/doc/${href.replace("/dev/doc/", "").replace(/\/$/, "")})`;
       }
       if (href.startsWith("/")) return `[${t}](https://sbox.game${href})`;
       return `[${t}](${href})`;
