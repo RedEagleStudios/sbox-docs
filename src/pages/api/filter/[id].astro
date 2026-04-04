@@ -1,0 +1,62 @@
+---
+import DocsLayout from "../../../layouts/DocsLayout.astro";
+import { Icon } from "astro-icon/components";
+import { TypeBadge } from "../../../components/TypeBadge";
+import { getAllTypes, fullNameToSlug, stripXml } from "../../../lib/api-data";
+import { EVERYTHING_FILTERS } from "../../../lib/api-categories";
+
+export function getStaticPaths() {
+  return EVERYTHING_FILTERS.map((filter) => ({
+    params: { id: filter.id },
+    props: { filter },
+  }));
+}
+
+const { filter } = Astro.props;
+const allTypes = getAllTypes();
+const filtered = allTypes.filter(filter.match).sort((a, b) => a.Name.localeCompare(b.Name));
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+---
+
+<DocsLayout title={filter.label} description={`${filtered.length} ${filter.label.toLowerCase()} in the s&box API`}>
+  <div data-pagefind-body>
+    <a href={`${base}/api/`} class="inline-flex items-center gap-1 text-sm text-text-muted hover:text-accent transition-colors mb-6">
+      <Icon name="lucide:chevron-left" class="h-4 w-4" />
+      API Reference
+    </a>
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-accent mb-2">{filter.label}</h1>
+      <p class="text-text-muted">{filtered.length} types</p>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead>
+          <tr class="border-b border-border text-left text-text-muted">
+            <th class="pb-2 pr-4 font-medium">Type</th>
+            <th class="pb-2 pr-4 font-medium">Name</th>
+            <th class="pb-2 font-medium">Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          {filtered.map((t) => (
+            <tr class="border-b border-border/50 hover:bg-surface-hover transition-colors">
+              <td class="py-2.5 pr-4">
+                <TypeBadge group={t.Group} className="text-[9px] px-1 py-0" />
+              </td>
+              <td class="py-2.5 pr-4 whitespace-nowrap">
+                <a href={`${base}/api/${fullNameToSlug(t.FullName)}`} class="text-accent hover:underline">
+                  {t.Name}
+                </a>
+                {t.Namespace && <span class="text-xs text-text-muted ml-2">{t.Namespace}</span>}
+              </td>
+              <td class="py-2.5 text-text-muted text-xs">
+                {t.Documentation?.Summary ? stripXml(t.Documentation.Summary).slice(0, 120) : ""}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</DocsLayout>

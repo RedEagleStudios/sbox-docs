@@ -1,7 +1,7 @@
 ---
 import DocsLayout from "../../../layouts/DocsLayout.astro";
 import { TypeBadge } from "../../../components/TypeBadge";
-import { getNamespaces, namespaceLink, resolveType } from "../../../lib/api-data";
+import { getNamespaces, namespaceLink, getTypeByFullName, stripXml } from "../../../lib/api-data";
 import type { NamespaceGroup } from "../../../lib/types";
 
 export function getStaticPaths() {
@@ -69,16 +69,33 @@ const nsParts = ns.namespace === "(global)" ? [] : ns.namespace.split(".");
     {groups.map((group) => (
       <section class="mb-8">
         <h2 class="text-xl font-semibold text-text mb-4 border-b border-border pb-2">{group.label}</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-          {group.types.map((t) => (
-            <a
-              href={`${base}/api/${t.slug}`}
-              class="flex items-center gap-2 rounded-lg border border-border bg-surface px-4 py-3 hover:border-accent/50 hover:bg-surface-hover transition-all"
-            >
-              <TypeBadge group={t.group} className="text-[9px] px-1 py-0" />
-              <span class="text-sm text-text hover:text-accent truncate">{t.name}</span>
-            </a>
-          ))}
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="border-b border-border text-left text-text-muted">
+                <th class="pb-2 pr-4 font-medium">Type</th>
+                <th class="pb-2 pr-4 font-medium">Name</th>
+                <th class="pb-2 font-medium">Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              {group.types.map((t) => {
+                const full = getTypeByFullName(t.fullName);
+                const desc = full?.Documentation?.Summary ? stripXml(full.Documentation.Summary).slice(0, 120) : "";
+                return (
+                  <tr class="border-b border-border/50 hover:bg-surface-hover transition-colors">
+                    <td class="py-2.5 pr-4">
+                      <TypeBadge group={t.group} className="text-[9px] px-1 py-0" />
+                    </td>
+                    <td class="py-2.5 pr-4 whitespace-nowrap">
+                      <a href={`${base}/api/${t.slug}`} class="text-accent hover:underline">{t.name}</a>
+                    </td>
+                    <td class="py-2.5 text-text-muted text-xs">{desc}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
         </div>
       </section>
     ))}

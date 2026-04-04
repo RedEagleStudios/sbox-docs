@@ -2,10 +2,14 @@
 import DocsLayout from "../../layouts/DocsLayout.astro";
 import { Icon } from "astro-icon/components";
 import { getNamespaces, getAllTypes } from "../../lib/api-data";
+import { categorizeTypes, EVERYTHING_FILTERS } from "../../lib/api-categories";
 
+const allTypes = getAllTypes();
 const namespaces = getNamespaces();
-const totalTypes = getAllTypes().length;
+const totalTypes = allTypes.length;
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+
+const categorized = categorizeTypes(allTypes).filter(c => c.types.length > 0);
 
 const groupColors: Record<string, string> = {
   class: "text-blue-400",
@@ -36,24 +40,65 @@ const namespacesWithCounts = namespaces.map((ns) => {
       </p>
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-      {namespacesWithCounts.map((ns) => (
-        <a
-          href={`${base}/api/ns/${ns.namespace}`}
-          class="group block rounded-xl border border-border bg-surface p-5 hover:border-accent/50 hover:bg-surface-hover transition-all"
-        >
-          <h2 class="font-semibold text-text group-hover:text-accent transition-colors mb-2 truncate">
-            {ns.namespace}
-          </h2>
-          <div class="flex flex-wrap gap-2 text-xs">
-            {Object.entries(ns.counts).map(([group, count]) => (
-              <span class={groupColors[group] ?? "text-text-muted"}>
-                {count} {group}{count > 1 ? (group === "class" ? "es" : "s") : ""}
-              </span>
-            ))}
-          </div>
-        </a>
-      ))}
-    </div>
+    <!-- Categories -->
+    <section class="mb-10">
+      <h2 class="text-lg font-semibold text-text-muted mb-4">Browse by Category</h2>
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
+        {categorized.map((cat) => (
+          <a
+            href={`${base}/api/category/${cat.id}`}
+            class="group flex items-center gap-2 rounded-lg border border-border bg-surface px-4 py-3 hover:border-accent/50 hover:bg-surface-hover transition-all"
+          >
+            <Icon name={cat.icon} class="h-4 w-4 text-text-muted group-hover:text-accent shrink-0" />
+            <span class="text-sm text-text group-hover:text-accent truncate">{cat.label}</span>
+            <span class="text-xs text-text-muted ml-auto">{cat.types.length}</span>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <!-- Everything filters -->
+    <section class="mb-10">
+      <h2 class="text-lg font-semibold text-text-muted mb-4">Everything</h2>
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
+        {EVERYTHING_FILTERS.map((filter) => {
+          const count = allTypes.filter(filter.match).length;
+          return (
+            <a
+              href={`${base}/api/filter/${filter.id}`}
+              class="group flex items-center gap-2 rounded-lg border border-border bg-surface px-4 py-3 hover:border-accent/50 hover:bg-surface-hover transition-all"
+            >
+              <Icon name="lucide:list" class="h-4 w-4 text-text-muted group-hover:text-accent shrink-0" />
+              <span class="text-sm text-text group-hover:text-accent">{filter.label}</span>
+              <span class="text-xs text-text-muted ml-auto">{count}</span>
+            </a>
+          );
+        })}
+      </div>
+    </section>
+
+    <!-- Namespaces -->
+    <section class="mb-10">
+      <h2 class="text-lg font-semibold text-text-muted mb-4">All Namespaces</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+        {namespacesWithCounts.map((ns) => (
+          <a
+            href={`${base}/api/ns/${ns.namespace}`}
+            class="group block rounded-xl border border-border bg-surface p-5 hover:border-accent/50 hover:bg-surface-hover transition-all"
+          >
+            <h3 class="font-semibold text-text group-hover:text-accent transition-colors mb-2 truncate">
+              {ns.namespace}
+            </h3>
+            <div class="flex flex-wrap gap-2 text-xs">
+              {Object.entries(ns.counts).map(([group, count]) => (
+                <span class={groupColors[group] ?? "text-text-muted"}>
+                  {count} {group}{count > 1 ? (group === "class" ? "es" : "s") : ""}
+                </span>
+              ))}
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
   </div>
 </DocsLayout>

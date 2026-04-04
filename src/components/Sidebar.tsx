@@ -2,8 +2,15 @@ import { useState, useMemo } from "react";
 import { TypeBadge } from "./TypeBadge";
 import type { NamespaceTreeNode } from "../lib/types";
 
+export interface SidebarCategory {
+  id: string;
+  label: string;
+  count: number;
+}
+
 interface Props {
   tree: NamespaceTreeNode[];
+  categories?: SidebarCategory[];
   currentSlug?: string;
   currentNamespace?: string;
   base?: string;
@@ -155,7 +162,7 @@ function filterTree(nodes: NamespaceTreeNode[], q: string): NamespaceTreeNode[] 
     .filter((n): n is NamespaceTreeNode => n !== null);
 }
 
-export function Sidebar({ tree, currentSlug, currentNamespace, base = "" }: Props) {
+export function Sidebar({ tree, categories, currentSlug, currentNamespace, base = "" }: Props) {
   const [filter, setFilter] = useState("");
 
   const ancestors = useMemo(() => {
@@ -195,6 +202,27 @@ export function Sidebar({ tree, currentSlug, currentNamespace, base = "" }: Prop
         />
       </div>
       <div className="flex-1 overflow-y-auto p-2">
+        {/* Category quick links */}
+        {!filter && categories && categories.length > 0 && (
+          <div className="mb-3 pb-3 border-b border-border/50">
+            <div className="px-2 py-1 text-[10px] font-semibold uppercase tracking-wider text-text-muted">
+              Categories
+            </div>
+            {categories.map((cat) => (
+              <a
+                key={cat.id}
+                href={`${base}/api/category/${cat.id}`}
+                className="flex items-center justify-between px-2 py-1 text-xs text-text-muted hover:text-text hover:bg-surface-hover rounded transition-colors"
+              >
+                <span>{cat.label}</span>
+                <span className="text-[10px] opacity-50">{cat.count}</span>
+              </a>
+            ))}
+            <div className="px-2 py-1 mt-2 text-[10px] font-semibold uppercase tracking-wider text-text-muted">
+              Namespaces
+            </div>
+          </div>
+        )}
         {filtered.map((node) => (
           <TreeNode
             key={node.fullPath}
