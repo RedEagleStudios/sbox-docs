@@ -114,242 +114,78 @@ void OnExternalChangesPostLoad( GameResource resource ) { }
 
 ### Editor
 
-Event
-Arguments
-Invokes
-
-`editor.created`
-EditorMainWindow
-When the editor has just started
-
-`tool.frame`
-
-Every frame
-
-`hotloaded`
-
-When a hotload occurs
-
-`refresh`
-
-When assemblies are changed
-
-`tools.gamedata.refresh`
-
-When assemblies are changed. Runs after `refresh`
-
-`app.exit`
-
-When the editor is shutting down
-
-`localaddons.changed`
-
-When Project Settings are updated
-
-`keybinds.update`
-
-When Editor Keybinds have been changed
+| Event | Arguments | Invokes |
+| --- | --- | --- |
+| `editor.created` | EditorMainWindow | When the editor has just started |
+| `tool.frame` |  | Every frame |
+| `hotloaded` |  | When a hotload occurs |
+| `refresh` |  | When assemblies are changed |
+| `tools.gamedata.refresh` |  | When assemblies are changed. Runs after `refresh` |
+| `app.exit` |  | When the editor is shutting down |
+| `localaddons.changed` |  | When Project Settings are updated |
+| `keybinds.update` |  | When Editor Keybinds have been changed |
 
 ### Asset System
 
-Event
-Arguments
-Invokes
-
-`assetsystem.newfolder`
-
-When a new folder was created
-
-`assetsystem.openpicker`
-AssetPickerParameters
-When opening an Asset Picker
-
-`assetsystem.highlight`
-string
-When you click "Show in Asset Browser"
-
-`asset.contextmenu`
-AssetContextMenu
-When an asset is right clicked
-
-`asset.nativecontextmenu`
-FolderContextMenu
-When a folder is right clicked
-
-`content.changed`
-string
-When a file has changed in the "Content" path
-
-`compile.shader`
-string
-When a shader starts compiling
-
-`open.shader`
-string
-When opening a shader
-
-`package.changed`
-Package
-When you update a package
-
-`package.changed.installed`
-Package
-When a package is installed
-
-`package.changed.uninstalled`
-Package
-When a package is uninstalled
-
-`package.changed.favourite`
-Package
-When you favourite a package
-
-`package.changed.rating`
-Package
-When you upvote/downvote
+| Event | Arguments | Invokes |
+| --- | --- | --- |
+| `assetsystem.newfolder` |  | When a new folder was created |
+| `assetsystem.openpicker` | AssetPickerParameters | When opening an Asset Picker |
+| `assetsystem.highlight` | string | When you click "Show in Asset Browser" |
+| `asset.contextmenu` | AssetContextMenu | When an asset is right clicked |
+| `asset.nativecontextmenu` | FolderContextMenu | When a folder is right clicked |
+| `content.changed` | string | When a file has changed in the "Content" path |
+| `compile.shader` | string | When a shader starts compiling |
+| `open.shader` | string | When opening a shader |
+| `package.changed` | Package | When you update a package |
+| `package.changed.installed` | Package | When a package is installed |
+| `package.changed.uninstalled` | Package | When a package is uninstalled |
+| `package.changed.favourite` | Package | When you favourite a package |
+| `package.changed.rating` | Package | When you upvote/downvote |
 
 ### Scenes
 
-Event
-Arguments
-Invokes
-
-`scene.open`
-
-When a Scene or Prefab is opened
-
-`scene.startplay`
-
-When you click the Play button
-
-`scene.play`
-
-When the Scene enters Play Mode
-
-`scene.stop`
-
-When the Scene exits Play Mode
-
-`scene.session.save`
-
-Every second a Scene is open
-
-`scene.saved`
-Scene
-When a Scene is saved
+| Event | Arguments | Invokes |
+| --- | --- | --- |
+| `scene.open` |  | When a Scene or Prefab is opened |
+| `scene.startplay` |  | When you click the Play button |
+| `scene.play` |  | When the Scene enters Play Mode |
+| `scene.stop` |  | When the Scene exits Play Mode |
+| `scene.session.save` |  | Every second a Scene is open |
+| `scene.saved` | Scene | When a Scene is saved |
 
 ### Widgets
 
-Event
-Arguments
-Invokes
-
-`paintoverlay`
-
-When highlighting a Panel in the "UI Panels" tab
-
-`qt.mousepressed`
-
-When the Editor receives a mouse event
-
-`gameframe.statusbar`
-StatusBar
-When the status bar is being built<br>(Used to add your own Widgets)
-
-`tools.headerbar.build`
-HeadBarEvent
-When the header bar is build built<br>(Used to add your own Widgets)
-
-`editor.preferences`
-NavigationView
-When the preferences widget is opened<br>(Used to add your own pages)
+| Event | Arguments | Invokes |
+| --- | --- | --- |
+| `paintoverlay` |  | When highlighting a Panel in the "UI Panels" tab |
+| `qt.mousepressed` |  | When the Editor receives a mouse event |
+| `gameframe.statusbar` | StatusBar | When the status bar is being built<br>(Used to add your own Widgets) |
+| `tools.headerbar.build` | HeadBarEvent | When the header bar is build built<br>(Used to add your own Widgets) |
+| `editor.preferences` | NavigationView | When the preferences widget is opened<br>(Used to add your own pages) |
 
 ### Tools
 
-Event
-Arguments
-Invokes
-
-`modeldoc.menu.tools`
-Menu
-When launching ModelDoc
-
-`hammer.initialized`
-
-When hammer is opened
-
-`hammer.selection.changed`
-
-When hammer selection has changed
-
-`hammer.rendermapview`
-MapView
-For each MapView before rendering begins
-
-`hammer.rendermapviewhud`
-
-When the hammer hud is rendered
-
-`hammer.mapview.contextmenu`
-Menu, MapView
-When the MapView is right clicked
-
-`actiongraph.saving`
-ActionGraph, GameResource
-Right before an ActionGraph is saved
-
-`actiongraph.saved`
-ActionGraph
-When an ActionGraph is saved
-
-`actiongraph.inspect`
-IMessageContext
-When inspecting anything in the ActionGraph
-
-`actiongraph.findreflectionnodes`
-FindReflectionNodeTypesEvent
-When attempting to get a list of reflection nodes
-
-`actiongraph.findtarget`
-FindGraphTargetEvent
-When attempting to find the target
-
-`actiongraph.globalnodes`
-GetGlobalNodeTypesEvent
-When attempting to get global nodes
-
-`actiongraph.localnodes`
-GetLocalNodeTypesEvent
-When attempting to get local nodes
-
-`actiongraph.querynodes`
-QueryNodeTypesEvent
-When filtering through an existing list of nodes
-
-`actiongraph.nodemenu`
-PopulateNodeMenuEvent
-When populating the node menu
-
-`actiongraph.createsubgraphmenu`
-PopulateCreateSubGraphMenuEvent
-When right clicking to create a sub-graph
-
-`actiongraph.outputplugmenu`
-PopulateOutputPlugMenuEvent
-When clicking and dragging out of an output plug
-
-`actiongraph.inputplugmenu`
-PopulateInputPlugMenuEvent
-When clicking and dragging out of an input plug
-
-`actiongraph.gotoplugsource`
-GoToPlugSourceEvent
-When double clicking on a plug to go to it's source
-
-`actiongraph.inputlabel`
-BuildInputLabelEvent
-When building an input label
-
-`actiongraph.geteditorproperties`
-GetEditorPropertiesEvent
-Called when launching ActionGraph
+| Event | Arguments | Invokes |
+| --- | --- | --- |
+| `modeldoc.menu.tools` | Menu | When launching ModelDoc |
+| `hammer.initialized` |  | When hammer is opened |
+| `hammer.selection.changed` |  | When hammer selection has changed |
+| `hammer.rendermapview` | MapView | For each MapView before rendering begins |
+| `hammer.rendermapviewhud` |  | When the hammer hud is rendered |
+| `hammer.mapview.contextmenu` | Menu, MapView | When the MapView is right clicked |
+| `actiongraph.saving` | ActionGraph, GameResource | Right before an ActionGraph is saved |
+| `actiongraph.saved` | ActionGraph | When an ActionGraph is saved |
+| `actiongraph.inspect` | IMessageContext | When inspecting anything in the ActionGraph |
+| `actiongraph.findreflectionnodes` | FindReflectionNodeTypesEvent | When attempting to get a list of reflection nodes |
+| `actiongraph.findtarget` | FindGraphTargetEvent | When attempting to find the target |
+| `actiongraph.globalnodes` | GetGlobalNodeTypesEvent | When attempting to get global nodes |
+| `actiongraph.localnodes` | GetLocalNodeTypesEvent | When attempting to get local nodes |
+| `actiongraph.querynodes` | QueryNodeTypesEvent | When filtering through an existing list of nodes |
+| `actiongraph.nodemenu` | PopulateNodeMenuEvent | When populating the node menu |
+| `actiongraph.createsubgraphmenu` | PopulateCreateSubGraphMenuEvent | When right clicking to create a sub-graph |
+| `actiongraph.outputplugmenu` | PopulateOutputPlugMenuEvent | When clicking and dragging out of an output plug |
+| `actiongraph.inputplugmenu` | PopulateInputPlugMenuEvent | When clicking and dragging out of an input plug |
+| `actiongraph.gotoplugsource` | GoToPlugSourceEvent | When double clicking on a plug to go to it's source |
+| `actiongraph.inputlabel` | BuildInputLabelEvent | When building an input label |
+| `actiongraph.geteditorproperties` | GetEditorPropertiesEvent | Called when launching ActionGraph |

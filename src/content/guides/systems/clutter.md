@@ -22,17 +22,11 @@ A list of models or prefabs to scatter. Each entry has a **Weight** value that c
 
 Controls how entries are distributed across the surface.
 
-**Scatterer**
-**Description**
-
-**Simple**
-Random placement with configurable density, scale range, ground alignment, and height offset. Good for most use cases.
-
-**Slope**
-Filters entries by surface angle. Map different entries to different slope ranges e.g. grass on flat ground, rocks on steep slopes.
-
-**Terrain Material**
-Places entries based on the terrain material at each point. Map specific entries to specific terrain layers. e.g. flowers on dirt, moss on rock.
+| Scatterer | Description |
+| --- | --- |
+| Simple | Random placement with configurable density, scale range, ground alignment, and height offset. Good for most use cases. |
+| Slope | Filters entries by surface angle. Map different entries to different slope ranges e.g. grass on flat ground, rocks on steep slopes. |
+| Terrain Material | Places entries based on the terrain material at each point. Map specific entries to specific terrain layers. e.g. flowers on dirt, moss on rock. |
 
 It is possible to extend and implement your own scatterer in case you need more scattering rules. e.g. using splines, volumes, or textures to drive the scattering
 
@@ -48,14 +42,10 @@ Controls the tile grid used for generation and streaming:
 
 Add a **ClutterComponent** to a GameObject in your scene and assign a Clutter Definition. It has two modes:
 
-**Mode**
-**Description**
-
-**Infinite**
-Streams tiles around the camera automatically. Tiles are created and destroyed as the camera moves. Use this for open-world ground cover.
-
-**Volume**
-Generates clutter within a fixed bounding box. Click **Generate** to populate. Instances are saved with the scene.
+| Mode | Description |
+| --- | --- |
+| Infinite | Streams tiles around the camera automatically. Tiles are created and destroyed as the camera moves. Use this for open-world ground cover. |
+| Volume | Generates clutter within a fixed bounding box. Click Generate to populate. Instances are saved with the scene. |
 
 In **Infinite** mode, the system automatically regenerates tiles when the terrain is modified underneath them.
 

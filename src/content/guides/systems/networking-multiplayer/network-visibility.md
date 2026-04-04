@@ -41,14 +41,10 @@ public class MyVisibilityComponent : Component, INetworkVisible
 
 ### IsVisibleToConnection Parameters
 
-Parameter
-Description
-
-`Connection connection`
-The target player being tested.
-
-`BBox worldBounds`
-The object's world-space bounding box. Helpful for distance or frustum checks.
+| Parameter | Description |
+| --- | --- |
+| `Connection connection` | The target player being tested. |
+| `BBox worldBounds` | The object's world-space bounding box. Helpful for distance or frustum checks. |
 
 Return **true** if the object should be visible to that connection; **false** if it should be culled.
 

@@ -116,9 +116,7 @@ cameraTrack.Update( time, binder );
 
 ## Target Creation
 
-By default, the player will create any *GameObject*s or *Component*s referenced by the recording that aren't already in the scene. These targets will be flagged as *NotSaved
-NotNetworked
-Hidden*. You can turn this off with the *CreateTargets* property.
+| By default, the player will create any GameObjects or Components referenced by the recording that aren't already in the scene. These targets will be flagged as *NotSaved | NotNetworked | Hidden*. You can turn this off with the CreateTargets property. |
 
 ```csharp
 moviePlayer.CreateTargets = false;

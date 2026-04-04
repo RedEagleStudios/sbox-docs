@@ -43,17 +43,11 @@ public sealed class ExecuteInEditorSample : Component, Component.ExecuteInEditor
 
 A component with this interface can react to physics collisions.
 
-Method
-Description
-
-`OnCollisionStart`
-Called when this collider/rigidbody starts touching another collider.
-
-`OnCollisionUpdate`
-Called once per physics step for every collider being touched.
-
-`OnCollisionStop`
-Called when this collider/rigidbody stops touching another collider.
+| Method | Description |
+| --- | --- |
+| `OnCollisionStart` | Called when this collider/rigidbody starts touching another collider. |
+| `OnCollisionUpdate` | Called once per physics step for every collider being touched. |
+| `OnCollisionStop` | Called when this collider/rigidbody stops touching another collider. |
 
 ### Sample code
 
@@ -81,14 +75,10 @@ public sealed class CollisionListenerSample : Component, Component.ICollisionLis
 
 A component with this interface can react to trigger interactions.
 
-Method
-Description
-
-`OnTriggerEnter`
-Called when a collider enters the trigger.
-
-`OnTriggerExit`
-Called when a collider stops touching the trigger.
+| Method | Description |
+| --- | --- |
+| `OnTriggerEnter` | Called when a collider enters the trigger. |
+| `OnTriggerExit` | Called when a collider stops touching the trigger. |
 
 ### Sample code
 
@@ -111,11 +101,9 @@ public sealed class TriggerListenerSample : Component, Component.ITriggerListene
 
 A helper interface to mark components that can be damaged by something.
 
-Method
-Description
-
-`OnDamage`
-The method you invoke when damaging something marked with IDamageable
+| Method | Description |
+| --- | --- |
+| `OnDamage` | The method you invoke when damaging something marked with IDamageable |
 
 ### Sample code
 

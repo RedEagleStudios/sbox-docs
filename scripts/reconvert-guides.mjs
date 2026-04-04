@@ -45,6 +45,20 @@ function htmlToMd(html) {
     // Images
     .replace(/<img[^>]*src="([^"]*)"[^>]*alt="([^"]*)"[^>]*\/?>/gi, (_, s, a) => `![${a}](${s})`)
     .replace(/<img[^>]*src="([^"]*)"[^>]*\/?>/gi, (_, s) => `![](${s})`)
+    // Tables
+    .replace(/<table[\s\S]*?<\/table>/gi, (table) => {
+      const rows = [...table.matchAll(/<tr[^>]*>([\s\S]*?)<\/tr>/gi)];
+      if (rows.length === 0) return "";
+      const result = rows.map((row) => {
+        const cells = [...row[1].matchAll(/<t[hd][^>]*>([\s\S]*?)<\/t[hd]>/gi)];
+        return "| " + cells.map((c) => stripTags(c[1]).trim().replace(/\|/g, "\\|").replace(/\n/g, " ")).join(" | ") + " |";
+      });
+      if (result.length > 1) {
+        const headerCells = [...rows[0][1].matchAll(/<t[hd][^>]*>/gi)].length;
+        result.splice(1, 0, "| " + Array(headerCells).fill("---").join(" | ") + " |");
+      }
+      return "\n" + result.join("\n") + "\n";
+    })
     // Lists
     .replace(/<li[^>]*>([\s\S]*?)<\/li>/gi, (_, t) => "- " + stripTags(t).trim() + "\n")
     .replace(/<\/?[uo]l[^>]*>/gi, "\n")

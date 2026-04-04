@@ -70,26 +70,14 @@ public static void PlaySoundAllClients( string soundName, Vector3 position )
 }
 ```
 
-Name
-Description
-
-`NetFlags.Unreliable`
-Message will be sent unreliably. It may not arrive and it may be received out of order. But chances are that it will arrive on time and everything will be fine. This is good for sending position updates,  or spawning effects. This is the fastest way to send a message. It is also the cheapest.
-
-`NetFlags.Reliable`
-This is the default, so you don't need to specify this. Message will be sent reliably. Multiple attempts will be made until the recipient has received it. Use this for things like chat messages, or important events. This is the slowest way to send a message. It is also the most expensive.
-
-`NetFlags.SendImmediate`
-Message will not be grouped up with other messages, and will be sent immediately. This is most useful for things like streaming voice data, where packets need to stream in real-time, rather than arriving with a bunch of other packets.
-
-`NetFlags.DiscardOnDelay`
-Message will be dropped if it can't be sent quickly. Only applicable to unreliable messages.
-
-`NetFlag.HostOnly`
-This RPC can only be called from the Host.
-
-`NetFlag.OwnerOnly`
-This RPC can only be called from the owner of the object it's being called on.
+| Name | Description |
+| --- | --- |
+| `NetFlags.Unreliable` | Message will be sent unreliably. It may not arrive and it may be received out of order. But chances are that it will arrive on time and everything will be fine. This is good for sending position updates,  or spawning effects. This is the fastest way to send a message. It is also the cheapest. |
+| `NetFlags.Reliable` | This is the default, so you don't need to specify this. Message will be sent reliably. Multiple attempts will be made until the recipient has received it. Use this for things like chat messages, or important events. This is the slowest way to send a message. It is also the most expensive. |
+| `NetFlags.SendImmediate` | Message will not be grouped up with other messages, and will be sent immediately. This is most useful for things like streaming voice data, where packets need to stream in real-time, rather than arriving with a bunch of other packets. |
+| `NetFlags.DiscardOnDelay` | Message will be dropped if it can't be sent quickly. Only applicable to unreliable messages. |
+| `NetFlag.HostOnly` | This RPC can only be called from the Host. |
+| `NetFlag.OwnerOnly` | This RPC can only be called from the owner of the object it's being called on. |
 
 # Arguments
 

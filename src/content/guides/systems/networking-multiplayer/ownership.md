@@ -21,17 +21,11 @@ By default, a networked object's owner can only be changed by the host. However,
 go.Network.SetOwnerTransfer( OwnerTransfer.Takeover );
 ```
 
-Type
-Behaviour
-
-`OwnerTransfer.Takeover`
-Anyone can change the owner
-
-`OwnerTransfer.Fixed` *(default)*
-Only the host can change the owner
-
-`OwnerTransfer.Request`
-A request must be made to the host to change the owner
+| Type | Behaviour |
+| --- | --- |
+| `OwnerTransfer.Takeover` | Anyone can change the owner |
+| `OwnerTransfer.Fixed` (default) | Only the host can change the owner |
+| `OwnerTransfer.Request` | A request must be made to the host to change the owner |
 
 ## Getting the Owner
 
@@ -122,17 +116,9 @@ By default all networked objects that a client owns will be destroyed for everyo
 
 Simply call `GameObject.Network.SetOrphanedMode` with one of the following options:
 
-Type
-Behaviour
-
-`NetworkOrphaned.Destroy` *(default)*
-The object will be destroyed when the owner disconnects
-
-`NetworkOrphaned.Host`
-The host will be assigned ownership when the current owner disconnects
-
-`NetworkOrphaned.Random`
-A random client will be assigned ownership when the current owner disconnects
-
-`NetworkOrphaned.ClearOwner`
-The object will remain but ownership will be cleared (the host will simulate the object)
+| Type | Behaviour |
+| --- | --- |
+| `NetworkOrphaned.Destroy` (default) | The object will be destroyed when the owner disconnects |
+| `NetworkOrphaned.Host` | The host will be assigned ownership when the current owner disconnects |
+| `NetworkOrphaned.Random` | A random client will be assigned ownership when the current owner disconnects |
+| `NetworkOrphaned.ClearOwner` | The object will remain but ownership will be cleared (the host will simulate the object) |

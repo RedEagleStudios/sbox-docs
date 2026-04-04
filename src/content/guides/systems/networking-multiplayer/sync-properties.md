@@ -45,17 +45,11 @@ public class MyComponent : Component
 
 You can customize the behaviour of a synchronized property with `SyncFlags`.
 
-Flag
-**Description**
-
-`SyncFlags.Query`
-Enables Query Mode for the property. See the *Query Mode* section below.
-
-`SyncFlags.FromHost`
-The host has ownership over the value, instead of the owner of the networked object. Only the host may change the value.
-
-`SyncFlags.Interpolate`
-The value of the property will be interpolated for other clients. The value is interpolated over a few ticks.
+| Flag | Description |
+| --- | --- |
+| `SyncFlags.Query` | Enables Query Mode for the property. See the Query Mode section below. |
+| `SyncFlags.FromHost` | The host has ownership over the value, instead of the owner of the networked object. Only the host may change the value. |
+| `SyncFlags.Interpolate` | The value of the property will be interpolated for other clients. The value is interpolated over a few ticks. |
 
 # Collections
 

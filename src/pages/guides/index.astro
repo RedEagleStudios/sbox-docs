@@ -49,7 +49,7 @@ const sortedCategories = [...categories.entries()].sort(
         const meta = getCategoryMeta(cat);
         return (
           <a
-            href={`${base}/guides/${info.firstSlug}`}
+            href={`${base}/guides/${cat}`}
             class="group block rounded-xl border border-border bg-surface p-5 hover:border-accent/50 hover:bg-surface-hover transition-all"
           >
             <h3 class="text-lg font-semibold text-text group-hover:text-accent transition-colors mb-2">

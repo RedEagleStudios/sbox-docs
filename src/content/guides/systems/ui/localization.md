@@ -33,95 +33,35 @@ Then it's as easy as doing the following:
 
 # Languages
 
-English Name
-API Language Code
-
-Arabic
-ar
-
-Bulgarian
-bg
-
-Simplified Chinese
-zh-cn
-
-Traditional Chinese
-zh-tw
-
-Czech
-cs
-
-Danish
-da
-
-Dutch
-nl
-
-English
-en
-
-Finnish
-fi
-
-French
-fr
-
-German
-de
-
-Greek
-el
-
-Hungarian
-hu
-
-Italian
-it
-
-Japanese
-ja
-
-Korean
-ko
-
-Norwegian
-no
-
-Pirate
-en-pt
-
-Polish
-pl
-
-Portuguese
-pt
-
-Portuguese-Brazil
-pt-br
-
-Romanian
-ro
-
-Russian
-ru
-
-Spanish-Spain
-es
-
-Spanish-Latin America
-es-419
-
-Swedish
-sv
-
-Thai
-th
-
-Turkish
-tr
-
-Ukrainian
-uk
-
-Vietnamese
-vn
+| English Name | API Language Code |
+| --- | --- |
+| Arabic | ar |
+| Bulgarian | bg |
+| Simplified Chinese | zh-cn |
+| Traditional Chinese | zh-tw |
+| Czech | cs |
+| Danish | da |
+| Dutch | nl |
+| English | en |
+| Finnish | fi |
+| French | fr |
+| German | de |
+| Greek | el |
+| Hungarian | hu |
+| Italian | it |
+| Japanese | ja |
+| Korean | ko |
+| Norwegian | no |
+| Pirate | en-pt |
+| Polish | pl |
+| Portuguese | pt |
+| Portuguese-Brazil | pt-br |
+| Romanian | ro |
+| Russian | ru |
+| Spanish-Spain | es |
+| Spanish-Latin America | es-419 |
+| Swedish | sv |
+| Thai | th |
+| Turkish | tr |
+| Ukrainian | uk |
+| Vietnamese | vn |

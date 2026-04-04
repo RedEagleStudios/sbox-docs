@@ -43,24 +43,16 @@ public sealed class GameNetworkManager : Component, Component.INetworkListener
 
 The interface `INetworkListener` has multiple methods that you can optionally override.
 
-Method
-Description
-
-`OnConnected`
-The client has connected to the server. They're about to start handshaking, in which they'll load the game and download all the required packages.
-
-`OnDisconnected`
-The client has disconnected from the server.
-
-`OnActive`
-The client is fully connected and completely the handshake. After this call they will close the loading screen and start playing.
+| Method | Description |
+| --- | --- |
+| `OnConnected` | The client has connected to the server. They're about to start handshaking, in which they'll load the game and download all the required packages. |
+| `OnDisconnected` | The client has disconnected from the server. |
+| `OnActive` | The client is fully connected and completely the handshake. After this call they will close the loading screen and start playing. |
 
 # INetworkSpawn
 
 The interface `INetworkSpawn` has a method to react to objects spawning on the network.
 
-**Method**
-**Description**
-
-`OnNetworkSpawn`
-Called when this object is spawned on the network.
+| Method | Description |
+| --- | --- |
+| `OnNetworkSpawn` | Called when this object is spawned on the network. |

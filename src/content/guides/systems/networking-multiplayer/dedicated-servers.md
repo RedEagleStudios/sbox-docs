@@ -33,18 +33,8 @@ You can run the server with the following available command line parameters. The
 
 You can pass a path to a `.sbproj` file to load a local project on a Dedicated Server. Connected clients will receive code changes and hotload them.
 
-Switch
-Arguments
-Description
-
-+game
-`` `[mapPackageIdent]`
-The game package to load and optionally a map package.
-
-+hostname
-``
-The server title that players will see.
-
-+net_game_server_token
-``
-**This is not required and is only available as an option once s&box is released.**Visit [https://steamcommunity.com/dev/managegameservers](https://steamcommunity.com/dev/managegameservers) to generate a token associated with your Steam Account. You can use this token to ensure your Dedicated Server always has the same Steam ID for other players to connect to it. You don't need this, but otherwise every time you load the server it will generate a new Steam ID.
+| Switch | Arguments | Description |
+| --- | --- | --- |
+| +game | `` `[mapPackageIdent]` | The game package to load and optionally a map package. |
+| +hostname | `` | The server title that players will see. |
+| +net_game_server_token | `` | **This is not required and is only available as an option once s&box is released.**Visit [https://steamcommunity.com/dev/managegameservers](https://steamcommunity.com/dev/managegameservers) to generate a token associated with your Steam Account. You can use this token to ensure your Dedicated Server always has the same Steam ID for other players to connect to it. You don't need this, but otherwise every time you load the server it will generate a new Steam ID. |

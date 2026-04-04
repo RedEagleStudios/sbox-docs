@@ -36,136 +36,53 @@ As a reminder, **♻️ self-resetting parameters** set themselves immediately b
 
 ## Movement
 
-**Parameters**
-**Type & values**
-**Description**
-
-`b_grounded`
-☑️ bool
-Behaves like on characters; can be replicated as-is from third-person to first-person.
-
-`b_jump`
-☑️ bool, ♻️ self-resets
-Behaves like on characters; can be replicated as-is from third-person to first-person.
-
-`b_sprint`
-☑️ bool
-Controls sprinting stance. I recommend to set to true only if sprint key held ***and*** player is moving.
-
-`move_bob`
-🎚️ float, 0.0↔1.0
-Intensity of movement animations sway/bob (equivalent to `move_groundspeed` in 3P).
-
-`move_bob_cycle_control`
-🎚️ float, 0.0↔1.0
-Manual control of movement animation phase. Think of it like scrubbing through the animation yourself. Active if ≠ 0.0. If = 0.0, auto-resumes normal behaviour after 100ms.
-
-`move_x`, `move_y`, `move_z`
-🎚️ float, -1.0↔1.0
-Normalized movement input; unused but reserved for future, and should ideally be set anyway.
+| Parameters | Type & values | Description |
+| --- | --- | --- |
+| `b_grounded` | ☑️ bool | Behaves like on characters; can be replicated as-is from third-person to first-person. |
+| `b_jump` | ☑️ bool, ♻️ self-resets | Behaves like on characters; can be replicated as-is from third-person to first-person. |
+| `b_sprint` | ☑️ bool | Controls sprinting stance. I recommend to set to true only if sprint key held and player is moving. |
+| `move_bob` | 🎚️ float, 0.0↔1.0 | Intensity of movement animations sway/bob (equivalent to `move_groundspeed` in 3P). |
+| `move_bob_cycle_control` | 🎚️ float, 0.0↔1.0 | Manual control of movement animation phase. Think of it like scrubbing through the animation yourself. Active if ≠ 0.0. If = 0.0, auto-resumes normal behaviour after 100ms. |
+| `move_x`, `move_y`, `move_z` | 🎚️ float, -1.0↔1.0 | Normalized movement input; unused but reserved for future, and should ideally be set anyway. |
 
 ## Weapon mechanics, actions, and states
 
-**Parameters**
-**Type & values**
-**Description**
-
-`b_attack`
-☑️ bool, ♻️ self-resets
-Plays the gun's fire animation, or throws a punch.
-
-`b_attack_dry`
-☑️ bool
-Use this instead of b_attack when the gun is empty.
-
-`b_attack_hit`
-☑️ bool
-Set to true if the attack connects (used for melee hit/miss animation variations).
-
-`attack_hold`
-🎚️ float, 0.0↔1.0
-Staggered recoil for continuous fire; blend toward 1 when holding fire and continuously firing.
-
-`b_reload`
-☑️ bool, ♻️ self-resets
-Triggers reload animation.
-
-`b_empty`
-☑️ bool
-Set to true if magazine/clip is empty; is used to switch to different reload animations and affect weapon visuals (e.g. slide pulled back).
-
-`ironsights`
-🗂️ enum, 1 = ADS
-Trigger "aim down sights" stance. The animation is only in charge of aligning the gun in its default state, additional offsets (for attachments) are up to you in code.
-
-`ironsights_fire_scale`
-🎚️ float, 0.0↔1.0
-Scale down strength of fire animations while aiming down sights.
-
-`firing_mode`
-🗂️ enum
-Reflects firing mode selector on the weapon. Values vary. Usually: 0 = safety/off, 1 = single, 2 = burst, 3 = auto.
-
-`b_deploy_skip`
-☑️ bool
-Skip the deploy animation when the animgraph initializes.
-
-`b_twohanded`
-☑️ bool
-Toggle between one-handed and two-handed animation sets. Only supported by some weapons.
-
-`b_lower_weapon`
-☑️ bool
-Aim the weapon away from center and lower it (HL2-style ally-friendly aim posture).
-
-`b_holster`
-☑️ bool
-Holster the weapon. Unticking will trigger a re-deploy, but it's not guaranteed to be ideal. Recommendation: once your code detects the 🏷️`holster_finished` tag, destroy the GameObject. Recreate it if the same weapon is drawn again.
-
-`weapon_pose`
-🗂️ enum
-Adjust pose for attachments. Used by some weapons; refer to the section below.
-
-`b_grab`
-☑️ bool
-Trigger the "grab stance" (left hand ready, towards the center of the screen).
-
-`grab_action`
-🗂️ enum, ♻️ self-resets
-Trigger a "grab gesture". 1 = sweep down, 2 = sweep right, 3 = sweep left, 4 = push button.
-
-`deploy_type`, `reload_type`
-🗂️ enum
-Used by some weapons; refer to the section below.
+| Parameters | Type & values | Description |
+| --- | --- | --- |
+| `b_attack` | ☑️ bool, ♻️ self-resets | Plays the gun's fire animation, or throws a punch. |
+| `b_attack_dry` | ☑️ bool | Use this instead of b_attack when the gun is empty. |
+| `b_attack_hit` | ☑️ bool | Set to true if the attack connects (used for melee hit/miss animation variations). |
+| `attack_hold` | 🎚️ float, 0.0↔1.0 | Staggered recoil for continuous fire; blend toward 1 when holding fire and continuously firing. |
+| `b_reload` | ☑️ bool, ♻️ self-resets | Triggers reload animation. |
+| `b_empty` | ☑️ bool | Set to true if magazine/clip is empty; is used to switch to different reload animations and affect weapon visuals (e.g. slide pulled back). |
+| `ironsights` | 🗂️ enum, 1 = ADS | Trigger "aim down sights" stance. The animation is only in charge of aligning the gun in its default state, additional offsets (for attachments) are up to you in code. |
+| `ironsights_fire_scale` | 🎚️ float, 0.0↔1.0 | Scale down strength of fire animations while aiming down sights. |
+| `firing_mode` | 🗂️ enum | Reflects firing mode selector on the weapon. Values vary. Usually: 0 = safety/off, 1 = single, 2 = burst, 3 = auto. |
+| `b_deploy_skip` | ☑️ bool | Skip the deploy animation when the animgraph initializes. |
+| `b_twohanded` | ☑️ bool | Toggle between one-handed and two-handed animation sets. Only supported by some weapons. |
+| `b_lower_weapon` | ☑️ bool | Aim the weapon away from center and lower it (HL2-style ally-friendly aim posture). |
+| `b_holster` | ☑️ bool | Holster the weapon. Unticking will trigger a re-deploy, but it's not guaranteed to be ideal. Recommendation: once your code detects the 🏷️`holster_finished` tag, destroy the GameObject. Recreate it if the same weapon is drawn again. |
+| `weapon_pose` | 🗂️ enum | Adjust pose for attachments. Used by some weapons; refer to the section below. |
+| `b_grab` | ☑️ bool | Trigger the "grab stance" (left hand ready, towards the center of the screen). |
+| `grab_action` | 🗂️ enum, ♻️ self-resets | Trigger a "grab gesture". 1 = sweep down, 2 = sweep right, 3 = sweep left, 4 = push button. |
+| `deploy_type`, `reload_type` | 🗂️ enum | Used by some weapons; refer to the section below. |
 
 ## Others
 
-**Parameters**
-**Type & values**
-**Description**
-
-`camera_position_scale`<br>`camera_rotation_scale`
-🎚️ float, 0.0↔2.0
-Control the strength of camera animations. Setting the float above 1.0 makes them stronger (but only up to 2.0).
+| Parameters | Type & values | Description |
+| --- | --- | --- |
+| `camera_position_scale`<br>`camera_rotation_scale` | 🎚️ float, 0.0↔2.0 | Control the strength of camera animations. Setting the float above 1.0 makes them stronger (but only up to 2.0). |
 
 ## Speed scaling
 
 You can change these 🎚️ floats at any time, including in the middle of the animations they affect!
 
-**Parameters**
-**What's affected**
-
-`speed_reload`
-Reload animations
-
-`speed_deploy`
-Deploy & holster animations
-
-`speed_ironsights`
-Ironsight transitions
-
-`speed_grab`
-Grab stance & grab gestures
+| Parameters | What's affected |
+| --- | --- |
+| `speed_reload` | Reload animations |
+| `speed_deploy` | Deploy & holster animations |
+| `speed_ironsights` | Ironsight transitions |
+| `speed_grab` | Grab stance & grab gestures |
 
 ## Aim modifiers
 
