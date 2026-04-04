@@ -38,6 +38,15 @@ const { guide, isIndex, indexSlug, children } = Astro.props;
 const Content = guide ? (await render(guide)).Content : null;
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 
+// Build prev/next navigation from ordered guide list
+const allGuides = (await getCollection("guides"))
+  .filter((g) => g.data.slug !== "index")
+  .sort((a, b) => a.data.order - b.data.order);
+
+const currentIndex = guide ? allGuides.findIndex((g) => g.data.slug === guide.data.slug) : -1;
+const prevGuide = currentIndex > 0 ? allGuides[currentIndex - 1] : null;
+const nextGuide = currentIndex >= 0 && currentIndex < allGuides.length - 1 ? allGuides[currentIndex + 1] : null;
+
 const currentSlug = guide?.data?.slug || indexSlug;
 const currentTitle = guide?.data?.title || (indexSlug?.split("/").pop()?.replace(/-/g, " ").replace(/\b\w/g, (c: string) => c.toUpperCase()));
 const breadcrumbParts = currentSlug.split("/");
@@ -88,6 +97,30 @@ const breadcrumbParts = currentSlug.split("/");
             </h2>
           </a>
         ))}
+      </div>
+    )}
+
+    <!-- Prev/Next navigation -->
+    {guide && (prevGuide || nextGuide) && (
+      <div class="mt-12 grid grid-cols-2 gap-4">
+        {prevGuide ? (
+          <a
+            href={`${base}/doc/${prevGuide.data.slug}`}
+            class="group flex flex-col rounded-lg border border-border bg-surface p-4 hover:border-accent/50 hover:bg-surface-hover transition-all"
+          >
+            <span class="text-xs text-text-muted mb-1">&larr; Previous</span>
+            <span class="text-sm font-medium text-text group-hover:text-accent truncate">{prevGuide.data.title}</span>
+          </a>
+        ) : <div />}
+        {nextGuide ? (
+          <a
+            href={`${base}/doc/${nextGuide.data.slug}`}
+            class="group flex flex-col items-end rounded-lg border border-border bg-surface p-4 hover:border-accent/50 hover:bg-surface-hover transition-all"
+          >
+            <span class="text-xs text-text-muted mb-1">Next &rarr;</span>
+            <span class="text-sm font-medium text-text group-hover:text-accent truncate">{nextGuide.data.title}</span>
+          </a>
+        ) : <div />}
       </div>
     )}
 
