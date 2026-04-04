@@ -139,7 +139,7 @@ export function GuidesSidebar({ tree, currentSlug, base = "" }: Props) {
       <div className="p-3 border-b border-border">
         <input
           type="text"
-          placeholder="Filter guides..."
+          placeholder="Filter docs..."
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
           className="w-full rounded-md border border-border bg-surface px-3 py-1.5 text-sm text-text placeholder:text-text-muted focus:outline-none focus:border-accent"

@@ -56,7 +56,7 @@ const breadcrumbParts = currentSlug.split("/");
   <div data-pagefind-body>
     <!-- Breadcrumb -->
     <div class="flex items-center gap-2 text-sm text-text-muted mb-6 flex-wrap">
-      <a href={`${base}/doc/`} class="hover:text-accent transition-colors">Guides</a>
+      <a href={`${base}/doc/`} class="hover:text-accent transition-colors">Docs</a>
       {breadcrumbParts.map((part, i) => {
         const isLast = i === breadcrumbParts.length - 1;
         const path = breadcrumbParts.slice(0, i + 1).join("/");

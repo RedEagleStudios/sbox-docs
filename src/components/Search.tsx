@@ -162,7 +162,7 @@ export function Search({ base = "" }: { base?: string }) {
                       ? "text-blue-400 border-blue-500/30 bg-blue-500/10"
                       : "text-green-400 border-green-500/30 bg-green-500/10"
                   }`}>
-                    {r.url.includes("/api/") ? "API" : "Guide"}
+                    {r.url.includes("/api/") ? "API" : "Docs"}
                   </span>
                   <span className="font-medium truncate">{r.meta.title}</span>
                 </div>
