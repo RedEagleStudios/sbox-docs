@@ -1,6 +1,7 @@
 ---
 title: "Creating a new PanelComponent"
 slug: "systems/ui/razor-panels"
+order: 64
 category: "systems"
 source: "https://sbox.game/dev/doc/systems/ui/razor-panels/"
 ---
@@ -15,41 +16,43 @@ Every single UI consists of a [PanelComponent](https://sbox.game/api/Sandbox.Pan
 
 When you create a new Component, select "New Razor Panel Component" to get the following:
 
+```csharp
 @using Sandbox;
 @using Sandbox.UI;
 @inherits PanelComponent
 
-<root>
-	<div class="title">@MyStringValue</div>
-</root>
+	@MyStringValue
 
 @code
 {
 
 	[Property, TextArea] public string MyStringValue { get; set; } = "Hello World!";
 
-	/// <summary>
+	/// 
 	/// the hash determines if the system should be rebuilt. If it changes, it will be rebuilt
-	/// </summary>
+	/// 
 	protected override int BuildHash() => System.HashCode.Combine( MyStringValue );
 }
+```
 
 ## HTML/Razor
 
 Anything within the `` tags is treated as HTML, allowing you to inject C# as-needed, like so:
 
-<root>
+```csharp
+
   @foreach(var player in Player.All)
   {
-    <div class="player">
-      <label>@player.Name</label>
+    
+      @player.Name
       @if(player.IsDead)
       {
-        <img src="ui/skull.png" />
+        ![](ui/skull.png)
       }
-    </div>
+    
   }
-</root>
+
+```
 
 If no `` element is present, then any and all elements will be a child of your Panel's root automatically.
 
@@ -67,13 +70,12 @@ You can also force a rebuild by calling `StateHasChanged()`. This will queue the
 
 Since a PanelComponent is the root, any child elements are instead Panels. These are created in the exact same way PanelComponents are, but instead inheriting the Panel class (which `.razor` files do by default):
 
+```csharp
 @using Sandbox;
 @using Sandbox.UI;
 
-<root>
-  <div class="health">HP: @Health</div>
-  <div class="armor">Armor: @Armor</div>
-</root>
+  HP: @Health
+  Armor: @Armor
 
 @code
 {
@@ -82,24 +84,29 @@ Since a PanelComponent is the root, any child elements are instead Panels. These
   
   protected override int BuildHash() => System.HashCode.Combine( Health, Armor );
 }
+```
 
 ## How to Use
 
 Back in your PanelComponent (or any other Panel), you can simply use the panel like any other element:
 
-<MyChildPanel />
+```csharp
+
+```
 
 And can even pass variables to the Panel like so:
 
-<MyChildPanel Health=@(30) Armor=@(75) />
+```csharp
+
+```
 
 ## How to store a Panel Reference
 
 If you wish to store a reference to MyChildPanel so you can modify its properties in code, you can do this:
 
-<root>
-  <MyChildPanel @ref="PanelReference" />
-</root>
+```csharp
+
+  
 
 @code
 {
@@ -111,6 +118,7 @@ If you wish to store a reference to MyChildPanel so you can modify its propertie
     PanelReference.Armor = Player.Local.Armor;
   }
 }
+```
 
 ## Two Way Binds
 
@@ -118,12 +126,13 @@ Sometimes you want to bind a variable to a control, and if it changes, sync the 
 
 You create a two way bind using `:bind` after the attribute name:
 
-<SliderEntry min="0" max="100" step="1" Value:bind=@IntValue></SliderEntry>
+```csharp
 
 @code
 {
 	public int IntValue{ get; set; } = 32;
 }
+```
 
 The example above will update the Slider when IntValue changes, and IntValue when the Slider changes
 

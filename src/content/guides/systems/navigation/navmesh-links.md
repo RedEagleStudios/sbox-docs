@@ -1,6 +1,7 @@
 ---
 title: "Creating Links"
 slug: "systems/navigation/navmesh-links"
+order: 40
 category: "systems"
 source: "https://sbox.game/dev/doc/systems/navigation/navmesh-links/"
 ---
@@ -19,6 +20,7 @@ We provide virtual functions you can override and events you can subscribe to in
 
 Custom NavMeshLinkComponent:
 
+```csharp
 public sealed class CustomLink : NavMeshLink
 {
 	protected virtual void OnLinkEntered( NavMeshAgent agent )
@@ -31,13 +33,15 @@ public sealed class CustomLink : NavMeshLink
  
 	}
 }
+```
 
 NavMeshLink & NavMeshAgent Events:
 
+```csharp
 public class NavMeshLink
 {
-    public Action<NavMeshAgent> LinkEntered;
-    public Action<NavMeshAgent> LinkExited;
+    public Action LinkEntered;
+    public Action LinkExited;
 }
 
 public class NavMeshAgent
@@ -45,6 +49,7 @@ public class NavMeshAgent
     public Action LinkEnter;
     public Action LinkExit;
 }
+```
 
 ## Custom Links
 
@@ -52,7 +57,9 @@ In most cases the default traversal wont suffice. You will likely want to move t
 
 If you want to handle the traversal yourself you first need to disable the default traversal on the agent.
 
+```csharp
 Agent.AutoTraverseLinks = false;
+```
 
 Afterwards there are couple options to take over the link traversal and handle it yourself:
 
@@ -78,6 +85,7 @@ The positional values can be used to drive custom movement and animations.
 
 ![](https://cdn.sbox.game/doc/29240c03-ad99-492d-977a-2534898baf97)
 
+```csharp
 public record struct LinkTraversalData
 {
 	public Vector3 LinkEnterPosition;
@@ -88,11 +96,13 @@ public record struct LinkTraversalData
 
 	public NavMeshLink LinkComponent;
 }
+```
 
 In this example we crate a custom link component that overrides `OnLinkEntered`. The component then drives a simple parabolic jump for the agent using the data from `Agent.CurrentLinkTraversal`.
 
 Note, how we manually update the Agents position every frame using `Agent.SetAgentPosition()`.
 
+```csharp
 public sealed class JumpLink : NavMeshLink
 {
     protected override void OnLinkEntered( NavMeshAgent agent )
@@ -119,28 +129,7 @@ public sealed class JumpLink : NavMeshLink
       
       	TimeSince timeSinceStart = 0;
       
-      	while ( timeSinceStart < duration )
-      	{
-      		var t = timeSinceStart / duration;
-      
-      		// Linearly interpolate XY positions
-      		var newPosition = Vector3.Lerp( start, end, t );
-      
-      		// Apply parabolic curve to Z position using a quadratic function
-      		var yOffset = 4f * peakHeight * t * (1f - t);
-      		newPosition.z = MathX.Lerp( start.z, end.z, t ) + yOffset;
-      
-      		agent.SetAgentPosition( newPosition );
-      
-      		await Task.Frame();
-      	}
-      
-      	agent.SetAgentPosition( end );
-      	agent.CompleteLinkTraversal();
-    }
-}
-
-### Ladders
+      	while ( timeSinceStart 
 
 Ladders follow a similar pattern. But the animated movement is different, it's divided into 3 parts:
 
@@ -150,6 +139,7 @@ Ladders follow a similar pattern. But the animated movement is different, it's d
 
 - Walk off the ladder
 
+```csharp
 public sealed class LadderLink : NavMeshLink
 {
     protected override void OnLinkEntered( NavMeshAgent agent )
@@ -175,38 +165,7 @@ public sealed class LadderLink : NavMeshLink
     
     	TimeSince timeSinceStart = 0;
     
-    	while ( timeSinceStart < totalLadderTime )
-    	{
-    		Vector3 newPosition = start;
-    
-    		// 1. Make sure we are positioned at the link start
-    		if ( timeSinceStart < startDuration )
-    		{
-    			newPosition = Vector3.Lerp( initialPos, start, timeSinceStart / startDuration );
-    		}
-    		// 2. Vertical Movement
-    		else if ( timeSinceStart < startDuration + climbDuration )
-    		{
-    			newPosition = Vector3.Lerp( start, endVertical, (timeSinceStart - startDuration) / climbDuration );
-    		}
-    		// 3. Move off ladder to link end position
-    		else
-    		{
-    			newPosition = Vector3.Lerp( endVertical, end, (timeSinceStart - startDuration - climbDuration) / endDuration );
-    		}
-    
-    		agent.SetAgentPosition( newPosition );
-    
-    		await Task.Frame();
-    	}
-    
-    	agent.SetAgentPosition( end );
-    
-    	agent.CompleteLinkTraversal();
-    }
-}
-
-### Physics Based Jump
+    	while ( timeSinceStart 
 
 You can also let the physics system drive the jump for you.
 
@@ -218,6 +177,7 @@ To perform a jump we simply apply a velocity to the RigidBody.
 Physics jumps are usually hard to get right consistently, because they can fail in the same way a player jump can fail.
 For example, jump was initiated to early/late or the jump was blocked by something mid air.
 
+```csharp
 public sealed class NavigationLinkTraversal : Component
 {
 	[RequireComponent]
@@ -293,6 +253,7 @@ public sealed class NavigationLinkTraversal : Component
 		Agent.CompleteLinkTraversal();
 	}
 }
+```
 
 ### Full Example on testbed
 

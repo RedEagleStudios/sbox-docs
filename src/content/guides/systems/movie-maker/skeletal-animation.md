@@ -1,6 +1,7 @@
 ---
 title: "Getting Started"
 slug: "systems/movie-maker/skeletal-animation"
+order: 34
 category: "systems"
 source: "https://sbox.game/dev/doc/systems/movie-maker/skeletal-animation/"
 ---

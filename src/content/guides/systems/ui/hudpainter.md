@@ -1,6 +1,7 @@
 ---
-title: "hudpainter"
+title: "HudPainter"
 slug: "systems/ui/hudpainter"
+order: 66
 category: "systems"
 source: "https://sbox.game/dev/doc/systems/ui/hudpainter/"
 ---
@@ -11,7 +12,8 @@ This is more efficient than using actual UI panels because there's no layout, st
 
 If your UI is relatively simple, you can do it this way to keep things easy.
 
-	protected override void OnUpdate()
+```csharp
+protected override void OnUpdate()
 	{
 		if ( Scene.Camera is null )
 			return;
@@ -24,3 +26,4 @@ If your UI is relatively simple, you can do it this way to keep things easy.
 
 		hud.DrawText( new TextRendering.Scope( "Hello!", Color.Red, 32 ), Screen.Width * 0.5f );
 	}
+```

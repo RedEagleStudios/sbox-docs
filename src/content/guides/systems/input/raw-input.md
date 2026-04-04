@@ -1,6 +1,7 @@
 ---
-title: "raw input"
+title: "Raw Input"
 slug: "systems/input/raw-input"
+order: 25
 category: "systems"
 source: "https://sbox.game/dev/doc/systems/input/raw-input/"
 ---
@@ -9,6 +10,7 @@ We very much recommend that you only use this if you can't use input actions for
 
 We have the ability to access keyboard inputs directly, bypassing input actions.
 
+```csharp
 //
 // Is the W key down this frame?
 //
@@ -32,6 +34,7 @@ if ( Input.Keyboard.Released( "W" ) )
 {
     Log.Info( "W was released!" );
 }
+```
 
 Most of the keys on the keyboard should work, here's an exhaustive list of them.
 

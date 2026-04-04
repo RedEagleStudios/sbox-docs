@@ -1,6 +1,7 @@
 ---
 title: "Code Location"
 slug: "editor/texture-generators"
+order: 92
 category: "editor"
 source: "https://sbox.game/dev/doc/editor/texture-generators/"
 ---
@@ -9,6 +10,7 @@ In the editor Textures can be generated in a number of ways. They can be created
 
 You can create your own texture generators in code, and they will then be selectable.
 
+```csharp
 [Title( "Cicle" )]
 [Icon( "palette" )]
 [ClassName( "circlegenerator" )]
@@ -22,7 +24,7 @@ public class CircleTextureGenerator : Sandbox.Resources.TextureGenerator
 	[Hide, JsonIgnore]
 	public override bool CacheToDisk => true;
 
-	protected override ValueTask<Texture> CreateTexture( Options options, CancellationToken ct )
+	protected override ValueTask CreateTexture( Options options, CancellationToken ct )
 	{
 		var bitmap = new Bitmap( 128, 128 );
 
@@ -34,6 +36,7 @@ public class CircleTextureGenerator : Sandbox.Resources.TextureGenerator
 		return ValueTask.FromResult( bitmap.ToTexture() );
 	}
 }
+```
 
 The code above creates a circle texture generator. It draws a circle in the middle of a 128x128 texture.
 

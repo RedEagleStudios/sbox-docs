@@ -1,6 +1,7 @@
 ---
-title: "faq"
+title: "FAQ"
 slug: "about/faq"
+order: 1
 category: "about"
 source: "https://sbox.game/dev/doc/about/faq/"
 ---

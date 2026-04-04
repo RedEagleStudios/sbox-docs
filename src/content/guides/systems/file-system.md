@@ -1,6 +1,7 @@
 ---
 title: "File Systems"
 slug: "systems/file-system"
+order: 20
 category: "systems"
 source: "https://sbox.game/dev/doc/systems/file-system/"
 ---
@@ -29,17 +30,20 @@ There are a few different File Systems available to use in your game. Each one w
 
 # Reading and Writing Text
 
+```csharp
 // If the file doesn't exist already then write some data to it
 if ( !FileSystem.Data.FileExists( "player.txt" ) )
     FileSystem.Data.WriteAllText( "player.txt", "Hello, world!" );
 
 // Read the text back into a variable from the file
 var hello = FileSystem.Data.ReadAllText( "player.txt" );
+```
 
 # Reading and Writing Json
 
 `WriteJson` and `ReadJson` will only work with [Properties](https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/classes-and-structs/properties) of your class unless directed not to - make sure the things you want to save are [Properties](https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/classes-and-structs/properties)!
 
+```csharp
 public class PlayerData
 {
   	public int Level { get; set; } // Will be serialized
@@ -53,6 +57,7 @@ public class PlayerData
 
 	public static PlayerData Load()
 	{
-		return FileSystem.Data.ReadJson<PlayerData>( "player.json" );
+		return FileSystem.Data.ReadJson( "player.json" );
 	}
 }
+```

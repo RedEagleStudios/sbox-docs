@@ -1,6 +1,7 @@
 ---
 title: "Nodes"
 slug: "editor/model-editor"
+order: 96
 category: "editor"
 source: "https://sbox.game/dev/doc/editor/model-editor/"
 ---

@@ -1,6 +1,7 @@
 ---
 title: "The Play Fund"
 slug: "about/getting-started/monetization"
+order: 6
 category: "about"
 source: "https://sbox.game/dev/doc/about/getting-started/monetization/"
 ---

@@ -1,6 +1,28 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
+  --color-background: #ffffff;
+  --color-surface: #f1f5f9;
+  --color-surface-hover: #e2e8f0;
+  --color-border: #cbd5e1;
+  --color-border-bright: #94a3b8;
+  --color-text: #1e293b;
+  --color-text-muted: #64748b;
+  --color-accent: #2563eb;
+  --color-accent-hover: #3b82f6;
+
+  --color-badge-class: #3b82f6;
+  --color-badge-struct: #22c55e;
+  --color-badge-enum: #a855f7;
+  --color-badge-interface: #eab308;
+
+  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", "Fira Code", "Cascadia Code", monospace;
+}
+
+.dark {
   --color-background: #0b1120;
   --color-surface: #0f172a;
   --color-surface-hover: #141d30;
@@ -10,14 +32,6 @@
   --color-text-muted: #94a3b8;
   --color-accent: #3b82f6;
   --color-accent-hover: #60a5fa;
-
-  --color-badge-class: #3b82f6;
-  --color-badge-struct: #22c55e;
-  --color-badge-enum: #a855f7;
-  --color-badge-interface: #eab308;
-
-  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
-  --font-mono: "JetBrains Mono", "Fira Code", "Cascadia Code", monospace;
 }
 
 html {
@@ -60,22 +74,33 @@ pre code {
   padding: 0;
 }
 
-/* Syntax highlighting for signatures */
-.syn-keyword { color: #c678dd; }
-.syn-type { color: #e5c07b; }
-.syn-type-link { color: #61afef; }
-.syn-name { color: #61afef; }
-.syn-param { color: #e2e8f0; }
-.syn-punct { color: #abb2bf; }
-.syn-modifier { color: #c678dd; }
-.syn-string { color: #98c379; }
+/* Syntax highlighting for signatures — light mode */
+.syn-keyword { color: #7c3aed; }
+.syn-type { color: #b45309; }
+.syn-type-link { color: #2563eb; }
+.syn-name { color: #2563eb; }
+.syn-param { color: #1e293b; }
+.syn-punct { color: #64748b; }
+.syn-modifier { color: #7c3aed; }
+.syn-string { color: #16a34a; }
+
+/* Syntax highlighting for signatures — dark mode */
+.dark .syn-keyword { color: #c678dd; }
+.dark .syn-type { color: #e5c07b; }
+.dark .syn-type-link { color: #61afef; }
+.dark .syn-name { color: #61afef; }
+.dark .syn-param { color: #e2e8f0; }
+.dark .syn-punct { color: #abb2bf; }
+.dark .syn-modifier { color: #c678dd; }
+.dark .syn-string { color: #98c379; }
 
 /* Prose styles for markdown guide content */
 .prose {
   color: var(--color-text);
   line-height: 1.75;
 }
-.prose h1 { font-size: 2rem; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem; color: var(--color-accent); }
+.prose h1 { font-size: 1.75rem; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem; color: var(--color-text); }
+.prose h1:first-child { display: none; }
 .prose h2 { font-size: 1.5rem; font-weight: 600; margin-top: 2rem; margin-bottom: 0.75rem; color: var(--color-text); border-bottom: 1px solid var(--color-border); padding-bottom: 0.5rem; }
 .prose h3 { font-size: 1.25rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.5rem; color: var(--color-text); }
 .prose h4 { font-size: 1.1rem; font-weight: 600; margin-top: 1.25rem; margin-bottom: 0.5rem; color: var(--color-text); }

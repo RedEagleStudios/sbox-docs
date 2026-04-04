@@ -1,6 +1,7 @@
 ---
 title: "Scope Based Undo"
 slug: "editor/undo-system"
+order: 95
 category: "editor"
 source: "https://sbox.game/dev/doc/editor/undo-system/"
 ---
@@ -11,12 +12,15 @@ The scope based system works by creating a snapshot of a change set when the sco
 
 A basic **blank** scope can be created as follows:
 
+```csharp
 // In Game & Editor Code
 var undoScope = Scene.Editor?.UndoScope( "You Action Name");
 
 // In Editor Code
 var undoScope = SceneEditorSession.Active.UndoScope( "Your Action Name" );
+```
 
+```csharp
 // Push() will turn the scope into an disposable
 using ( SceneEditorSession.Active.UndoScope( "You Action Name" ).Push() )
 {
@@ -33,6 +37,7 @@ using ( undoScope.Push() )
   using var undoScope = SceneEditorSession.Active.UndoScope( "You Action Name" ).Push();
   // Actions that modify the scene
 }
+```
 
 **However, these scopes will not capture anything yet.**
 
@@ -53,19 +58,24 @@ You also have to specify what part of the GameObject(s) you you would like to ca
 - `GameObjectUndoFlags.All`Shortcut to capture everything
 \
 
+```csharp
 using var undoScope = SceneEditorSession.Active.UndoScope( "You Action Name" )
   .WithGameObjectChanges( gameObject, GameObjectUndoFlags.Properties | GameObjectUndoFlags.Components)
   .Push();
+```
 
 To capture GameObject creation you can use `GameObjectCreations()`.
 
+```csharp
 using ( SceneEditorSession.Active.UndoScope( "Create Empty" ).WithGameObjectCreations().Push() )
 {
 	var go = new GameObject( true, "Object" );
 }
+```
 
 Similarly you can capture objects that are about to be destroyed.
 
+```csharp
 using ( SceneEditorSession.Active.UndoScope( "Delete Object(s)" ).WithGameObjectDestructions( selectedGos ).Push() )
 {
 	foreach ( var go in selectedGos )
@@ -76,31 +86,38 @@ using ( SceneEditorSession.Active.UndoScope( "Delete Object(s)" ).WithGameObject
 		go.Destroy();
 	}
 }
+```
 
 ## Components
 
 Components offer similar functionality. Components are always captured as a whole so there are no flags that need to be specified.
 
+```csharp
 using ( SceneEditorSession.Active.UndoScope( "Drop Material" ).WithComponentChanges( c as Component ).Push() )
 {
 	c.SetMaterial( material, trace.Triangle );
 }
+```
 
 ### Capture Creation
 
+```csharp
 using ( SceneEditorSession.Active.UndoScope( "Add Component(s)" ).WithComponentCreations().Push() )
 {
     var component = go.Components.Create( componentType );
     createdComponents.Add( component );
 }
+```
 
 ### Capture Destruction
 
+```csharp
 using ( SceneEditorSession.Active.UndoScope( $"Cut Component" ).WithComponentDestructions( component ).Push() )
 {
 	component.CopyToClipboard();
 	component.Destroy();
 }
+```
 
 ## Selections
 
@@ -110,12 +127,14 @@ Selections are always captured and restored on undo/redo
 
 As you may have already noticed you can chain the different functions together to capture a variety of changes and events.
 
+```csharp
 var undoScope = SceneEditorSession.Active.UndoScope( "Extract Faces" )
                   .WithComponentChanges( components )
                   .WithGameObjectDestructions( gameObjects )
                   .WithGameObjectCreations();
 
 using ( undoScope.Push() )
+```
 
 ## More Examples
 
@@ -123,13 +142,14 @@ using ( undoScope.Push() )
 
 If you have an action that spans multiple frames (e.g. dragging something around) you can use the following pattern to create an undo.
 
-public class BoxColliderTool : EditorTool<BoxCollider>
+```csharp
+public class BoxColliderTool : EditorTool
 {
 	private IDisposable _componentUndoScope;
 
 	public override void OnUpdate()
 	{
-		var boxCollider = GetSelectedComponent<BoxCollider>();
+		var boxCollider = GetSelectedComponent();
 		if ( boxCollider == null )
 			return;
 
@@ -159,9 +179,11 @@ public class BoxColliderTool : EditorTool<BoxCollider>
 		}
 	}
 }
+```
 
 ### Group GameObjects Action
 
+```csharp
 var undoScope = SceneEditorSession.Active.UndoScope( "Group Objects" )
                   .WithGameObjectChanges( selection, GameObjectUndoFlags.Properties )
                   .WithGameObjectCreations();
@@ -182,3 +204,4 @@ using ( undoScope.Push() )
 	EditorScene.Selection.Clear();
 	EditorScene.Selection.Add( go );
 }
+```

@@ -1,75 +1,137 @@
 ---
-import DocsLayout from "../layouts/DocsLayout.astro";
+import "../styles/globals.css";
+import { Icon } from "astro-icon/components";
+import { Search } from "../components/Search";
 import { getAllTypes } from "../lib/api-data";
+import ThemeToggle from "../components/ThemeToggle.astro";
+import ThemeScript from "../components/ThemeScript.astro";
 
 const allTypes = getAllTypes();
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 ---
 
-<DocsLayout title="Home" description="Comprehensive API documentation for the s&box game engine. Browse types, classes, structs, enums, and interfaces." isHomePage={true}>
-  <div class="max-w-3xl mx-auto">
-    <!-- Hero -->
-    <div class="text-center py-20">
-      <h1 class="text-5xl font-bold text-text mb-4">
-        Welcome to s&amp;box <span class="text-accent">Community Docs</span>
-      </h1>
-      <p class="text-text-muted text-lg max-w-2xl mx-auto">
-        A fast, searchable, and statically generated documentation site for the s&amp;box game engine.
-        Built by the community, for the community.
-      </p>
-    </div>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href={`${base}/favicon.svg`} />
+    <title>s&box Community Docs</title>
+    <meta name="description" content="Community documentation for the s&box game engine. API reference and development guides." />
+    <meta property="og:title" content="s&box Community Docs" />
+    <meta property="og:description" content="Community documentation for the s&box game engine." />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="s&box Community Docs" />
+    <ThemeScript />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      name: "s&box Community Docs",
+      url: "https://sbox.redeaglestudios.org",
+      description: "Community documentation for the s&box game engine.",
+    })} />
+  </head>
+  <body class="bg-background text-text">
+    <!-- Header -->
+    <header class="border-b border-border bg-background/80 backdrop-blur-sm">
+      <div class="flex items-center justify-between px-4 h-14 max-w-5xl mx-auto">
+        <a href={`${base}/`} class="flex items-center gap-2 font-bold text-accent hover:text-accent-hover transition-colors">
+          <span class="bg-accent text-white text-xs font-bold px-1.5 py-0.5 rounded">s&</span>
+          <span>Community Docs</span>
+        </a>
+        <div class="flex-1 max-w-md mx-4">
+          <Search client:idle base={base} />
+        </div>
+        <div class="flex items-center gap-4 text-sm text-text-muted">
+          <a href={`${base}/guides/`} class="hover:text-text transition-colors">Guides</a>
+          <a href={`${base}/api/`} class="hover:text-text transition-colors">API</a>
+          <ThemeToggle />
+        </div>
+      </div>
+    </header>
 
-    <!-- Cards -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-      <a
-        href={`${base}/api/`}
-        class="group block rounded-xl border border-border bg-surface p-6 hover:border-accent/50 hover:bg-surface-hover transition-all"
-      >
-        <div class="flex items-center gap-3 mb-3">
-          <div class="rounded-lg bg-accent/10 p-2.5">
-            <svg class="h-5 w-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-            </svg>
-          </div>
-          <h2 class="text-lg font-semibold text-text group-hover:text-accent transition-colors">
-            API Reference
-          </h2>
-        </div>
-        <p class="text-sm text-text-muted leading-relaxed">
-          Browse {allTypes.length.toLocaleString()} types, classes, structs, enums, and interfaces across the s&amp;box engine.
+    <main class="max-w-3xl mx-auto px-6">
+      <!-- Hero -->
+      <div class="text-center py-20">
+        <h1 class="text-5xl font-bold text-text mb-4">
+          Welcome to s&box <span class="text-accent">Community Docs</span>
+        </h1>
+        <p class="text-text-muted text-lg max-w-2xl mx-auto">
+          A fast, searchable, and statically generated documentation site for the s&box game engine.
+          Built by the community, for the community.
         </p>
-        <div class="mt-4 flex items-center gap-1 text-sm text-accent">
-          <span>Explore</span>
-          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-          </svg>
-        </div>
-      </a>
+      </div>
 
-      <a
-        href={`${base}/guides/`}
-        class="group block rounded-xl border border-border bg-surface p-6 hover:border-accent/50 hover:bg-surface-hover transition-all"
-      >
-        <div class="flex items-center gap-3 mb-3">
-          <div class="rounded-lg bg-accent/10 p-2.5">
-            <svg class="h-5 w-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
+      <!-- Cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <a
+          href={`${base}/api/`}
+          class="group block rounded-xl border border-border bg-surface p-6 hover:border-accent/50 hover:bg-surface-hover transition-all"
+        >
+          <div class="flex items-center gap-3 mb-3">
+            <div class="rounded-lg bg-accent/10 p-2.5">
+              <Icon name="lucide:book-open" class="h-5 w-5 text-accent" />
+            </div>
+            <h2 class="text-lg font-semibold text-text group-hover:text-accent transition-colors">
+              API Reference
+            </h2>
           </div>
-          <h2 class="text-lg font-semibold text-text group-hover:text-accent transition-colors">
-            Guides
-          </h2>
+          <p class="text-sm text-text-muted leading-relaxed">
+            Browse {allTypes.length.toLocaleString()} types, classes, structs, enums, and interfaces across the s&box engine.
+          </p>
+          <div class="mt-4 flex items-center gap-1 text-sm text-accent">
+            <span>Explore</span>
+            <Icon name="lucide:arrow-right" class="h-4 w-4" />
+          </div>
+        </a>
+
+        <a
+          href={`${base}/guides/`}
+          class="group block rounded-xl border border-border bg-surface p-6 hover:border-accent/50 hover:bg-surface-hover transition-all"
+        >
+          <div class="flex items-center gap-3 mb-3">
+            <div class="rounded-lg bg-accent/10 p-2.5">
+              <Icon name="lucide:file-text" class="h-5 w-5 text-accent" />
+            </div>
+            <h2 class="text-lg font-semibold text-text group-hover:text-accent transition-colors">
+              Guides
+            </h2>
+          </div>
+          <p class="text-sm text-text-muted leading-relaxed">
+            Tutorials and guides for getting started with s&box development.
+          </p>
+          <div class="mt-4 flex items-center gap-1 text-sm text-accent">
+            <span>Read guides</span>
+            <Icon name="lucide:arrow-right" class="h-4 w-4" />
+          </div>
+        </a>
+      </div>
+
+      <!-- Why link -->
+      <div class="text-center mt-12">
+        <a href={`${base}/why`} class="text-sm text-text-muted hover:text-accent transition-colors">
+          Why does this site exist?
+        </a>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-border mt-16 py-8">
+      <div class="max-w-3xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-text-muted">
+        <div class="flex items-center gap-2">
+          <span>Made by</span>
+          <a href="https://redeaglestudios.org" class="text-text hover:text-accent transition-colors font-medium" target="_blank" rel="noopener">
+            Red Eagle Studios
+          </a>
         </div>
-        <p class="text-sm text-text-muted leading-relaxed">
-          Tutorials and guides for getting started with s&amp;box development.
-        </p>
-        <div class="mt-4 flex items-center gap-1 text-sm text-accent">
-          <span>Read guides</span>
-          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-          </svg>
+        <div class="flex items-center gap-4">
+          <a href="https://github.com/RedEagleStudios/sbox-docs" class="inline-flex items-center gap-1.5 hover:text-text transition-colors" target="_blank" rel="noopener">
+            <Icon name="lucide:github" class="h-4 w-4" />
+            GitHub
+          </a>
+          <ThemeToggle />
         </div>
-      </a>
-    </div>
-  </div>
-</DocsLayout>
+      </div>
+    </footer>
+  </body>
+</html>

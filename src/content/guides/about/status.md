@@ -1,6 +1,7 @@
 ---
-title: "status"
+title: "Status"
 slug: "about/status"
+order: 2
 category: "about"
 source: "https://sbox.game/dev/doc/about/status/"
 ---

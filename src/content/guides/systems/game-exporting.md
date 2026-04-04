@@ -1,6 +1,7 @@
 ---
-title: "game exporting"
+title: "Game Exporting"
 slug: "systems/game-exporting"
+order: 21
 category: "systems"
 source: "https://sbox.game/dev/doc/systems/game-exporting/"
 ---

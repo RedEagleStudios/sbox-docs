@@ -1,6 +1,7 @@
 ---
-title: "component actions"
+title: "Component Actions"
 slug: "systems/actiongraph/component-actions"
+order: 14
 category: "systems"
 source: "https://sbox.game/dev/doc/systems/actiongraph/component-actions/"
 ---

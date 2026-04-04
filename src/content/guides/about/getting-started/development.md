@@ -1,6 +1,7 @@
 ---
 title: "Creating a project"
 slug: "about/getting-started/development"
+order: 5
 category: "about"
 source: "https://sbox.game/dev/doc/about/getting-started/development/"
 ---

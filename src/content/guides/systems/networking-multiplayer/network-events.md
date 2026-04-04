@@ -1,6 +1,7 @@
 ---
 title: "Example"
 slug: "systems/networking-multiplayer/network-events"
+order: 46
 category: "systems"
 source: "https://sbox.game/dev/doc/systems/networking-multiplayer/network-events/"
 ---
@@ -11,21 +12,22 @@ Your games will likely want to react to people joining and leaving the game. To 
 
 Here's an example, where on joining the game a player object is created and the incoming player is assigned as the owner.
 
+```csharp
 public sealed class GameNetworkManager : Component, Component.INetworkListener
 {
 	[Property] public GameObject PlayerPrefab { get; set; }
 	[Property] public GameObject SpawnPoint { get; set; }
 
-	/// <summary>
+	/// 
 	/// Called on the host when someone successfully joins the server (including the local player)
-	/// </summary>
+	/// 
 	public void OnActive( Connection connection )
 	{
 		// Spawn a player for this client
 		var player = PlayerPrefab.Clone( SpawnPoint.Transform.World );
 
 		// Find the NameTag component and set their name correctly
-		var nameTag = player.Components.Get<NameTagPanel>( FindMode.EverythingInSelfAndDescendants );
+		var nameTag = player.Components.Get( FindMode.EverythingInSelfAndDescendants );
 		if ( nameTag is not null )
 		{
 			nameTag.Name = connection.DisplayName;
@@ -35,6 +37,7 @@ public sealed class GameNetworkManager : Component, Component.INetworkListener
 		player.NetworkSpawn( connection );
 	}
 }
+```
 
 # INetworkListener
 

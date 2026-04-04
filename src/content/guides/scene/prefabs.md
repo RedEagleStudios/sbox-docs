@@ -1,6 +1,7 @@
 ---
 title: "Assets"
 slug: "scene/prefabs"
+order: 81
 category: "scene"
 source: "https://sbox.game/dev/doc/scene/prefabs/"
 ---
@@ -27,6 +28,7 @@ If you want to edit a prefab in the scene you can right-click it and choose `Unl
 
 To spawn Prefabs at runtime via code, you treat them like a regular GameObject. A GameObject property on your Component can be populated by dragging a PrefabFile into it.
 
+```csharp
 public sealed class MyGun : Component
 {
 	[Property] 
@@ -47,5 +49,6 @@ public sealed class MyGun : Component
 		}
 	}
 }
+```
 
 Note that a cloned prefab will still be linked to the prefab. You can call `bullet.BreakFromPrefab()` to remove that link and have it appear as a normal stack of GameObjects if you want to.

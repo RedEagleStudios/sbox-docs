@@ -1,6 +1,7 @@
 ---
-title: "project types"
+title: "Project Types"
 slug: "about/getting-started/project-types"
+order: 7
 category: "about"
 source: "https://sbox.game/dev/doc/about/getting-started/project-types/"
 ---

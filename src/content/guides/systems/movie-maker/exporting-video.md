@@ -1,6 +1,7 @@
 ---
-title: "exporting video"
+title: "Exporting Video"
 slug: "systems/movie-maker/exporting-video"
+order: 32
 category: "systems"
 source: "https://sbox.game/dev/doc/systems/movie-maker/exporting-video/"
 ---

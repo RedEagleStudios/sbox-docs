@@ -1,6 +1,7 @@
 ---
 title: "Transform"
 slug: "scene/gameobject"
+order: 73
 category: "scene"
 source: "https://sbox.game/dev/doc/scene/gameobject/"
 ---
@@ -15,6 +16,7 @@ If it has a parent then its transform is held relative to them, so when their pa
 
 Here's how you can interact with them in code
 
+```csharp
 // Set world position
 GameObject.WorldPosition = new Vector3( 100, 100, 100 );
 
@@ -23,11 +25,13 @@ GameObject.LocalPosition = new Vector3( 100, 100, 100 );
 
 // Set world transform
 GameObject.WorldTransform = new Transform( Vector3.Zero, new Angles( 90, 90, 180 ), 2.0f )
+```
 
 # Tags
 
 The GameObject's tags are used for multiple things. They're used to group physics objects to decide what should collide with each other. They can be used by cameras to decide which objects should and shouldn't render. And they can be used by programmers to do whatever they want.
 
+```csharp
 if ( GameObject.Tags.Has( "enemy" ) )
 {
 	GameObject.Destroy();
@@ -36,6 +40,7 @@ if ( GameObject.Tags.Has( "enemy" ) )
 GameObject.Tags.Add( "enemy" );
 GameObject.Tags.Set( "enemy", isEnemy );
 GameObject.Tags.Remove( "enemy" );
+```
 
 Tags are inherited. If a parent has the tag, then so does the child. The only way to remove the tag from the child is to remove it from the parent.
 

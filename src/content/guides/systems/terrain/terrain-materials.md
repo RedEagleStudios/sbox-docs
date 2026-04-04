@@ -1,6 +1,7 @@
 ---
-title: "terrain materials"
+title: "Terrain Materials"
 slug: "systems/terrain/terrain-materials"
+order: 62
 category: "systems"
 source: "https://sbox.game/dev/doc/systems/terrain/terrain-materials/"
 ---

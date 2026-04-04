@@ -35,7 +35,7 @@ const nsParts = ns.namespace === "(global)" ? [] : ns.namespace.split(".");
   <div data-pagefind-body>
     <!-- Breadcrumb -->
     <div class="flex items-center gap-2 text-sm text-text-muted mb-6 flex-wrap">
-      <a href={`${base}/api/`} class="hover:text-accent transition-colors">Api</a>
+      <a href={`${base}/api/`} class="hover:text-accent transition-colors">API</a>
       {nsParts.map((part, i) => {
         const path = nsParts.slice(0, i + 1).join(".");
         const isLast = i === nsParts.length - 1;

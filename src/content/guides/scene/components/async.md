@@ -1,6 +1,7 @@
 ---
 title: "Using Async"
 slug: "scene/components/async"
+order: 78
 category: "scene"
 source: "https://sbox.game/dev/doc/scene/components/async/"
 ---
@@ -11,6 +12,7 @@ By default, async tasks in s&box run on the main thread. They operate a lot like
 
 To make a method asynchronous, you do it like this..
 
+```csharp
 async Task PrintSomething( float waitSeconds, string message )
 {
 	// wait for this amount of seconds
@@ -19,47 +21,19 @@ async Task PrintSomething( float waitSeconds, string message )
 	// Print it
 	Log.Info( message );
 }
+```
 
 Components have a special Task property with some extra helper functions (like `DelayRealtimeSeconds`).
 
 As you can see, if a task is async, you can await it.
 
+```csharp
 async Task LerpSize( float seconds, Vector3 to, Easing.Function easer )
 {
 	TimeSince timeSince = 0;
 	Vector3 from = WorldScale;
  
-	while ( timeSince < seconds )
-	{
-		var size = Vector3.Lerp( from, to, easer( timeSince / seconds ) );
-		WorldScale = size;
-		await Task.Frame(); // wait one frame
-	}
-}
- 
-await LerpSize( 3.0f, Vector3.One * 3.3f, Easing.BounceOut );
-await LerpSize( 1.0f, Vector3.One * 4.0f, Easing.EaseInOut );
-await LerpSize( 1.0f, Vector3.One * 3.0f, Easing.EaseInOut );
-
-# Multiple Async
-
-Tasks can orchestrate and do multiple tasks at once. This feels like multithreading but it's not.
-
-async Task DoMultipleThings()
-{
-	// notice no await here
-	Task taskOne = PrintSomething( 2.0f, "One" );
-	Task taskTwo = PrintSomething( 3.0f, "Two" );
-
-	// wait for both these tasks
-	await Task.WhenAll( taskOne, taskTwo );
-}
-
-# Returning Values
-
-Async Tasks can return values too.
-
-async Task<string> GetKanyeQuote()
+	while ( timeSince  GetKanyeQuote()
 {
 	string kanyeQuote = await Http.RequestStringAsync( "https://api.kanye.rest/" );
 
@@ -73,28 +47,34 @@ async Task PrintKanyeQuote()
 	string quote = await GetKanyeQuote();
 	Log.Info( $"KANYE SAID: {quote}" );
 }
+```
 
 # Cooperating with synchronous code
 
 This is all cool, but how do you call these async functions from your regular functions?
 
+```csharp
 protected override void OnEnabled()
 {
 	// here the _ just tells the compiler that we don't care about the task
 	_ = DoMultipleThings();
 }
+```
 
 But what if from synchronous code you want to use the value?
 
+```csharp
 protected override void OnEnabled()
 {
     // Will run async and run this Action when the task finishes
     GetKanyeQuote().ContinueWith( task => Log.Info( $"Kanye: {task.Result}" ) );
 }
+```
 
 But what if I want to do it more stupidly?
 
-Task<string> getQuoteTask;
+```csharp
+Task getQuoteTask;
 
 protected override void OnEnabled()
 {
@@ -109,6 +89,7 @@ protected override void OnUpdate()
 		getQuoteTask = null;
 	}
 }
+```
 
 # Being Responsible
 

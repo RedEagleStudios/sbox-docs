@@ -1,6 +1,7 @@
 ---
 title: "Movie Editor"
 slug: "systems/movie-maker/getting-started"
+order: 27
 category: "systems"
 source: "https://sbox.game/dev/doc/systems/movie-maker/getting-started/"
 ---

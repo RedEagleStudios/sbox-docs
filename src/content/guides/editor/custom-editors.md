@@ -1,6 +1,7 @@
 ---
 title: "Creating a Custom ControlWidget"
 slug: "editor/custom-editors"
+order: 88
 category: "editor"
 source: "https://sbox.game/dev/doc/editor/custom-editors/"
 ---
@@ -13,6 +14,7 @@ When creating your own Classes/Structs/Assets/ect, you'll sometimes want custom 
 
 The above are examples of ControlWidgets. The Inspector will try to find the appropriate one for each type, falling back on a Class/Struct editor (or none if it's not applicable). We can define our own with [CustomEditor]
 
+```csharp
 public class MyClass
 {
     public Color Color { get; set; }
@@ -44,17 +46,21 @@ public class MyCustomControlWidget : ControlObjectWidget
         // Overriding and doing nothing here will prevent the default background from being painted
     }
 }
+```
 
 ![Now we have a Custom ControlWidget that looks and functions exactly as we want it to](https://cdn.sbox.game/doc/53c9d20a-6517-4849-8021-051f8b2dbf0d)
 
 You can also check for certain attributes, so you can have a custom Password string editor that only appears when you've added the [Password] attribute
 
+```csharp
 [CustomEditor(typeof(string), WithAllAttributes = new[] { typeof(PasswordAttribute) })]
+```
 
 # Creating a Custom InspectorWidget
 
 While creating Custom ControlWidgets is very powerful, sometimes you might want to replace the entire Inspector. This is especially useful for [Editor Tools](/guides/editor/editor-tools) or Assets, and is done with the [Inspector] attribute.
 
+```csharp
 using static Editor.Inspectors.AssetInspector;
 
 // [CanEdit] is used for editing Assets with a certain file extension, if the thing you wish to
@@ -126,7 +132,8 @@ public class CharacterInspector : Widget, IAssetInspector
     // Only needed if Asset Inspector, and you are implementing IAssetInspector
     public void SetAsset( Asset asset )
     {
-        Character = asset.LoadResource<CharacterResource>();
+        Character = asset.LoadResource();
         RebuildSheet();
     }
 }
+```

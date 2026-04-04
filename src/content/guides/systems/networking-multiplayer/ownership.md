@@ -1,6 +1,7 @@
 ---
 title: "Default Owners"
 slug: "systems/networking-multiplayer/ownership"
+order: 43
 category: "systems"
 source: "https://sbox.game/dev/doc/systems/networking-multiplayer/ownership/"
 ---
@@ -15,8 +16,10 @@ If an object is unowned by a connection then it is simulated by the host.
 
 By default, a networked object's owner can only be changed by the host. However, the current owner of the object can change that behavior by setting its `OwnerTransfer` value.
 
+```csharp
 // Make it so anyone can change the owner of this networked object.
 go.Network.SetOwnerTransfer( OwnerTransfer.Takeover );
+```
 
 Type
 Behaviour
@@ -34,13 +37,16 @@ A request must be made to the host to change the owner
 
 You can find the owner of a GameObject by checking `Network.OwnerId`.
 
+```csharp
 public override void Update()
 {
 	Log.Info( $"Owner is {Network.OwnerId}" );
 }
+```
 
 In reality, day to day, you won't really be interested in the particular owner. You only care about whether you're meant to be simulating it or not. You do that by checking `IsProxy` - which is true if the GameObject is being simulated by another client (or the server).
 
+```csharp
 public override void Update()
 {
     // this is controlled by someone else
@@ -52,11 +58,13 @@ public override void Update()
         TryPickup();
     }
 }
+```
 
 ## Taking Ownership
 
 You can take ownership of an object, which makes you the simulator.
 
+```csharp
 void TryPickup()
 {
 	// are we looking at anything?
@@ -78,6 +86,7 @@ void TryPickup()
     // Store that we're carrying it 
 	Carrying = go;
 }
+```
 
 So for example, if a player picks up an object, the player could take ownership of that object. That way the position is controlled by that player.
 
@@ -89,6 +98,7 @@ And of course, the player is generally controlled by its own connection.
 
 You can also stop owning an object. At that point the object becomes owned by the server.
 
+```csharp
 void ThrowObject()
 {
 	if ( !Carrying.IsValid() )
@@ -98,6 +108,7 @@ void ThrowObject()
 	Carrying.Network.DropOwnership();
 	Carrying = null;
 }
+```
 
 # Default Owners
 

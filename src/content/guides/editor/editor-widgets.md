@@ -1,6 +1,7 @@
 ---
 title: "Creating a Widget"
 slug: "editor/editor-widgets"
+order: 85
 category: "editor"
 source: "https://sbox.game/dev/doc/editor/editor-widgets/"
 ---
@@ -13,6 +14,7 @@ If a Widget does not have a parent, it is a Root Widget. This Widget will act as
 
 Each Widget has a Layout, which can contain child Widgets or sub-Layouts. Widgets can also be styled with CSS similarly to Panels.
 
+```csharp
 public class ExampleWidget : Widget
 {
 	public ExampleWidget(Widget parent) : base(parent, false)
@@ -34,9 +36,11 @@ public class ExampleWidget : Widget
 		};
 	}
 }
+```
 
 You can now create this Widget anywhere else in your Editor Project by doing the following:
 
+```csharp
 // Creates the Widget as a new Window since it has no parent
 var windowExample = new ExampleWidget(null);
 windowExample.Show()
@@ -44,12 +48,15 @@ windowExample.Show()
 // Creates the Widget as the child of another Widget, then adds it to that Widget's Layout
 var childExample = new ExampleWidget(parentWidget);
 parentWidget.Layout.Add(childExample);
+```
 
 # Creating a Dockable Widget
 
 Creating a Widget with the [Dock] attribute will allow it to be docked within any DockWindow. It will also be added to the View menu so it can be toggled easily.
 
+```csharp
 [Dock("Editor", "Example Editor Dock", "local_fire_department")]
+```
 
 ![The Dockable Window can now be opened/closed from the View menu](https://cdn.sbox.game/doc/1a0dc863-c059-4b27-8a68-d7631a63a873) ![How the Widget looks when un-docked](https://cdn.sbox.game/doc/6480bee1-9b83-488e-935a-66066031f0a4)
 
@@ -57,6 +64,7 @@ Creating a Widget with the [Dock] attribute will allow it to be docked within an
 
 Including the [EditorForAssetType] attribute will open your widget upon double-clicking the specified asset. Doing this will invoke `AssetOpen()` on your Widget through IAssetEditor so you can get any Asset information.
 
+```csharp
 // Supply the file extension of the asset, cannot be more than 8 characters
 [EditorForAssetType("item")]
 public class ItemEditorExample: Window, IAssetEditor
@@ -87,7 +95,7 @@ public class ItemEditorExample: Window, IAssetEditor
     {
         // Get the Resource from the Asset, from here you can get whatever info you want
         MyAsset = asset;
-        MyItem = MyAsset.LoadResource<ItemResource>();
+        MyItem = MyAsset.LoadResource();
         MyLabel.Text = MyItem.Name;
 
 		// If CanOpenMultipleAssets returns true, you should refocus this widget
@@ -105,3 +113,4 @@ public class ItemEditorExample: Window, IAssetEditor
         MyAsset.SaveToDisk(MyItem);
     }
 }
+```

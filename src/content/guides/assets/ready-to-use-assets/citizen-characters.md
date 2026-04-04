@@ -1,6 +1,7 @@
 ---
 title: "How to use them?"
 slug: "assets/ready-to-use-assets/citizen-characters"
+order: 98
 category: "assets"
 source: "https://sbox.game/dev/doc/assets/ready-to-use-assets/citizen-characters/"
 ---

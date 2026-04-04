@@ -1,6 +1,7 @@
 ---
 title: "New Instance"
 slug: "systems/networking-multiplayer/testing-multiplayer"
+order: 48
 category: "systems"
 source: "https://sbox.game/dev/doc/systems/networking-multiplayer/testing-multiplayer/"
 ---

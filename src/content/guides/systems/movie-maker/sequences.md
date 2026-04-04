@@ -1,6 +1,7 @@
 ---
 title: "Creating Sequences"
 slug: "systems/movie-maker/sequences"
+order: 28
 category: "systems"
 source: "https://sbox.game/dev/doc/systems/movie-maker/sequences/"
 ---

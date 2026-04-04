@@ -1,6 +1,7 @@
 ---
-title: "addon project"
+title: "Addon Project"
 slug: "about/getting-started/project-types/addon-project"
+order: 8
 category: "about"
 source: "https://sbox.game/dev/doc/about/getting-started/project-types/addon-project/"
 ---

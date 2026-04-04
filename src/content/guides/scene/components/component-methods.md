@@ -1,6 +1,7 @@
 ---
 title: "OnLoad (async)"
 slug: "scene/components/component-methods"
+order: 75
 category: "scene"
 source: "https://sbox.game/dev/doc/scene/components/component-methods/"
 ---
@@ -15,11 +16,13 @@ This is called after deserialization and is meant for a place for the component 
 
 If your component is doing something special, such as generating a procedural level, you can override this on your component to do this in the loadscreen.
 
+```csharp
 protected override async Task OnLoad()
 {
 	LoadingScreen.Title = "Loading Something..";
 	await Task.DelayRealtimeSeconds( 1.0f );
 }
+```
 
 Internally this is where the Map component downloads and loads the map.
 

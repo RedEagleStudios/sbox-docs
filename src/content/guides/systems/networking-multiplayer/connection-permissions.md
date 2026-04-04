@@ -1,6 +1,7 @@
 ---
 title: "Spawning Objects"
 slug: "systems/networking-multiplayer/connection-permissions"
+order: 50
 category: "systems"
 source: "https://sbox.game/dev/doc/systems/networking-multiplayer/connection-permissions/"
 ---

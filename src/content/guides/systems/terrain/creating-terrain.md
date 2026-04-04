@@ -1,6 +1,7 @@
 ---
-title: "creating terrain"
+title: "Creating Terrain"
 slug: "systems/terrain/creating-terrain"
+order: 61
 category: "systems"
 source: "https://sbox.game/dev/doc/systems/terrain/creating-terrain/"
 ---

@@ -1,6 +1,7 @@
 ---
 title: "Writing Snapshot Data"
 slug: "systems/networking-multiplayer/custom-snapshot-data"
+order: 52
 category: "systems"
 source: "https://sbox.game/dev/doc/systems/networking-multiplayer/custom-snapshot-data/"
 ---
@@ -13,6 +14,7 @@ In some circumstances you may want to add additional data to the network snapsho
 
 To write snapshot data for a Component you can simply override the `WriteSnapshot` method on a component.
 
+```csharp
 private byte[] MyVoxelData { get; set; }
     
 	void INetworkSnapshot.WriteSnapshot( ref ByteStream writer )
@@ -20,15 +22,17 @@ private byte[] MyVoxelData { get; set; }
         writer.Write( MyVoxelData.Length );
 		writer.WriteArray( MyVoxelData );
 	}
+```
 
 # Reading Snapshot Data
 
 Reading snapshot data can be done by overriding `ReadSnapshot` on a component. You can return a Task here to have the loading screen wait for this to be done before continuing.
 
-	void INetworkSnapshot.ReadSnapshot( ref ByteStream reader )
+```csharp
+void INetworkSnapshot.ReadSnapshot( ref ByteStream reader )
 	{
-        var length = reader.Read<int>();
-        MyVoxelData = reader.ReadArray<byte>( length ).ToArray();
+        var length = reader.Read();
+        MyVoxelData = reader.ReadArray( length ).ToArray();
 	}
  
     protected override Task OnLoad()
@@ -40,3 +44,4 @@ Reading snapshot data can be done by overriding `ReadSnapshot` on a component. Y
 	{
 		// ...
 	}
+```

@@ -1,6 +1,7 @@
 ---
 title: "Network Visibility & Culling"
 slug: "systems/networking-multiplayer/network-visibility"
+order: 51
 category: "systems"
 source: "https://sbox.game/dev/doc/systems/networking-multiplayer/network-visibility/"
 ---
@@ -27,6 +28,7 @@ You can take control of visibility by attaching a `Component` to the **root Game
 
 Only the **owner** of a networked object decides visibility for each connection.
 
+```csharp
 public class MyVisibilityComponent : Component, INetworkVisible
 {
     public bool IsVisibleToConnection( Connection connection, in BBox worldBounds )
@@ -35,6 +37,7 @@ public class MyVisibilityComponent : Component, INetworkVisible
         return true;
     }
 }
+```
 
 ### IsVisibleToConnection Parameters
 

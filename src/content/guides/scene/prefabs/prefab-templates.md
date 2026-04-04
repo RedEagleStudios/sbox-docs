@@ -1,6 +1,7 @@
 ---
-title: "prefab templates"
+title: "Prefab Templates"
 slug: "scene/prefabs/prefab-templates"
+order: 83
 category: "scene"
 source: "https://sbox.game/dev/doc/scene/prefabs/prefab-templates/"
 ---

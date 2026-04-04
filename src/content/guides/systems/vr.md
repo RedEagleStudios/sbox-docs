@@ -1,6 +1,7 @@
 ---
 title: "Enabling VR"
 slug: "systems/vr"
+order: 69
 category: "systems"
 source: "https://sbox.game/dev/doc/systems/vr/"
 ---
@@ -62,6 +63,7 @@ Here's a basic overview of the VR C# API:
 
 Get controller values
 
+```csharp
 // Get left hand controller grip
 var grip = Input.VR.LeftHand.Grip.Value;
 
@@ -73,10 +75,13 @@ if ( Input.VR.LeftHand.Trigger.Value > 0.5f )
   // Vibrate the controller
   Input.VR.LeftHand.TriggerHapticVibration( duration: 0.5f, frequency: 10, amplitude: 1.0f );
 }
+```
 
 ## Check if the player is running in VR
 
+```csharp
 if ( Game.IsRunningInVR )
 {
    Log.Info( "I am running the game in VR!" );
 }
+```

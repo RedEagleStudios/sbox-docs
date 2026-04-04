@@ -3,12 +3,14 @@ export interface GuideEntry {
   slug: string;
   title: string;
   category: string;
+  order: number;
 }
 
 export interface GuideTreeNode {
   name: string;
   slug: string;
   path: string;
+  order: number;
   children: GuideTreeNode[];
   guide?: GuideEntry;
 }
@@ -30,8 +32,8 @@ export function buildGuideTree(guides: GuideEntry[]): GuideTreeNode[] {
   const root: GuideTreeNode[] = [];
   const nodeMap = new Map<string, GuideTreeNode>();
 
-  // Sort by slug so parents come before children
-  const sorted = [...guides].sort((a, b) => a.slug.localeCompare(b.slug));
+  // Sort by order to preserve original s&box sidebar ordering
+  const sorted = [...guides].sort((a, b) => a.order - b.order);
 
   for (const guide of sorted) {
     const parts = guide.slug.split("/");
@@ -44,6 +46,7 @@ export function buildGuideTree(guides: GuideEntry[]): GuideTreeNode[] {
           name: parts[i].replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()),
           slug: path,
           path,
+          order: 999,
           children: [],
         };
         nodeMap.set(path, node);
@@ -64,6 +67,7 @@ export function buildGuideTree(guides: GuideEntry[]): GuideTreeNode[] {
     if (node) {
       node.guide = guide;
       node.name = guide.title || node.name;
+      node.order = guide.order;
     }
   }
 

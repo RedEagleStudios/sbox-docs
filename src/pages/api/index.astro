@@ -1,5 +1,6 @@
 ---
 import DocsLayout from "../../layouts/DocsLayout.astro";
+import { Icon } from "astro-icon/components";
 import { getNamespaces, getAllTypes } from "../../lib/api-data";
 
 const namespaces = getNamespaces();
@@ -24,6 +25,10 @@ const namespacesWithCounts = namespaces.map((ns) => {
 
 <DocsLayout title="API Reference" description={`Browse ${totalTypes} types across ${namespaces.length} namespaces in the s&box game engine API.`}>
   <div data-pagefind-body>
+    <a href={`${base}/`} class="inline-flex items-center gap-1 text-sm text-text-muted hover:text-accent transition-colors mb-6">
+      <Icon name="lucide:chevron-left" class="h-4 w-4" />
+      Home
+    </a>
     <div class="mb-8">
       <h1 class="text-3xl font-bold text-accent mb-2">API Reference</h1>
       <p class="text-text-muted">

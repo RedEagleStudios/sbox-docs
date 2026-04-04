@@ -1,9 +1,12 @@
 ---
 import "../styles/globals.css";
+import { Icon } from "astro-icon/components";
 import { GuidesSidebar } from "../components/GuidesSidebar";
 import { Search } from "../components/Search";
 import { getCollection } from "astro:content";
 import { buildGuideTree } from "../lib/guides-data";
+import ThemeToggle from "../components/ThemeToggle.astro";
+import ThemeScript from "../components/ThemeScript.astro";
 
 interface Props {
   title: string;
@@ -23,6 +26,7 @@ const guideEntries = allGuides.map((g) => ({
   slug: g.data.slug,
   title: g.data.title,
   category: g.data.category,
+  order: g.data.order,
 }));
 const tree = buildGuideTree(guideEntries);
 ---
@@ -41,6 +45,7 @@ const tree = buildGuideTree(guideEntries);
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonicalURL.href} />
     <meta property="og:site_name" content="s&box Community Docs" />
+    <ThemeScript />
   </head>
   <body class="bg-background text-text">
     <header class="sticky top-0 z-40 border-b border-border bg-background/80 backdrop-blur-sm">
@@ -51,9 +56,7 @@ const tree = buildGuideTree(guideEntries);
             class="lg:hidden p-1.5 rounded-md text-text-muted hover:text-text hover:bg-surface-hover transition-colors"
             aria-label="Toggle sidebar"
           >
-            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
+            <Icon name="lucide:menu" class="h-5 w-5" />
           </button>
           <a href={`${base}/`} class="flex items-center gap-2 font-bold text-accent hover:text-accent-hover transition-colors">
             <span class="bg-accent text-white text-xs font-bold px-1.5 py-0.5 rounded">s&</span>
@@ -65,6 +68,7 @@ const tree = buildGuideTree(guideEntries);
         </div>
         <div class="flex items-center gap-3 text-sm text-text-muted">
           <a href={`${base}/api/`} class="hover:text-text transition-colors">API</a>
+          <ThemeToggle />
         </div>
       </div>
     </header>

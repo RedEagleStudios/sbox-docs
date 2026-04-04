@@ -1,6 +1,7 @@
 ---
-title: "asset previews"
+title: "Asset Previews"
 slug: "editor/asset-previews"
+order: 89
 category: "editor"
 source: "https://sbox.game/dev/doc/editor/asset-previews/"
 ---
@@ -11,6 +12,7 @@ If you want a specific file/asset type to have a custom Thumbnail/Inspector Prev
 
 ## Model Example
 
+```csharp
 [AssetPreview( "mymdl" )]
 public class PreviewMyModelResource : AssetPreview
 {
@@ -27,7 +29,7 @@ public class PreviewMyModelResource : AssetPreview
 	public override Task InitializeAsset()
 	{
 		// Get the resource from the asset
-		var resource = Asset.LoadResource<MyModelResource>();
+		var resource = Asset.LoadResource();
 
 		// Get the Model from the resource
 		var model = resource?.Model;
@@ -43,7 +45,7 @@ public class PreviewMyModelResource : AssetPreview
 			PrimaryObject = new GameObject( true, "Model Preview" );
 			PrimaryObject.WorldTransform = Transform.Zero;
 
-			var modelRenderer = PrimaryObject.AddComponent<SkinnedModelRenderer>();
+			var modelRenderer = PrimaryObject.AddComponent();
 			modelRenderer.PlayAnimationsInEditorScene = true;
 			modelRenderer.Model = model; // Set the model on the renderer
 
@@ -55,9 +57,11 @@ public class PreviewMyModelResource : AssetPreview
 		return Task.CompletedTask;
 	}
 }
+```
 
 ## Texture Example
 
+```csharp
 [AssetPreview( "mytex" )]
 public class PreviewMyTextureResource : AssetPreview
 {
@@ -71,7 +75,7 @@ public class PreviewMyTextureResource : AssetPreview
 	public override Task InitializeAsset()
 	{
 		// Get the resource from the asset
-		var resource = Asset.LoadResource<MyTextureResource>();
+		var resource = Asset.LoadResource();
 
 		// Get the Texture from the resource
 		var texture = resource?.Texture;
@@ -87,7 +91,7 @@ public class PreviewMyTextureResource : AssetPreview
 			PrimaryObject = new GameObject( true, "Texture Preview" );
 			PrimaryObject.WorldTransform = Transform.Zero;
 
-			var spriteRenderer = PrimaryObject.AddComponent<SpriteRenderer>();
+			var spriteRenderer = PrimaryObject.AddComponent();
 			spriteRenderer.Texture = texture; // Set the texture on the renderer
 			spriteRenderer.Size = 100;
 		}
@@ -106,5 +110,6 @@ public class PreviewMyTextureResource : AssetPreview
 		Camera.WorldRotation = Rotation.LookAt( Vector3.Forward );
 	}
 }
+```
 
 ![How the Thumbnail and Preview appear](https://cdn.sbox.game/doc/34b2e564-c8cf-4c96-9372-b32eedb7a52a)

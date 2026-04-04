@@ -1,6 +1,7 @@
 ---
-title: "Overview"
+title: "Networking & Multiplayer"
 slug: "systems/networking-multiplayer"
+order: 41
 category: "systems"
 source: "https://sbox.game/dev/doc/systems/networking-multiplayer/"
 ---
@@ -13,20 +14,26 @@ Here's a quick cheat sheet for the network system, to get you started.
 
 ### Create a new lobby
 
+```csharp
 Networking.CreateLobby( new LobbyConfig()
 {
   MaxPlayers = 8,
   Privacy = LobbyPrivacy.Public,
   Name = "My Lobby Name"
 } );
+```
 
 ### List all available lobbies
 
+```csharp
 list = await Networking.QueryLobbies();
+```
 
 ### Join an existing lobby
 
+```csharp
 Networking.Connect( lobbyId );
+```
 
 ## Enable GameObject Networking
 
@@ -34,17 +41,23 @@ Networking.Connect( lobbyId );
 
 ## Destroy Networked GameObject
 
+```csharp
 go.Destroy();
+```
 
 ## Instantiating a Networked GameObject
 
+```csharp
 var go = PlayerPrefab.Clone( SpawnPoint.Transform.World );
 go.NetworkSpawn();
+```
 
 ## RPCs
 
+```csharp
 [Rpc.Broadcast]
 public void OnJump()
 {
 	Log.Info( $"{this} Has Jumped!" );
 }
+```

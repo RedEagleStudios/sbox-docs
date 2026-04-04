@@ -1,6 +1,7 @@
 ---
 title: "About"
 slug: "index"
+order: 0
 category: "index"
 source: "https://sbox.game/dev/doc/"
 ---

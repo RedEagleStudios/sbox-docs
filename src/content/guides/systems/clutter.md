@@ -1,6 +1,7 @@
 ---
 title: "Clutter Resource"
 slug: "systems/clutter"
+order: 19
 category: "systems"
 source: "https://sbox.game/dev/doc/systems/clutter/"
 ---

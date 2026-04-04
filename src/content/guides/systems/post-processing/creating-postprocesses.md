@@ -1,6 +1,7 @@
 ---
 title: "The Component"
 slug: "systems/post-processing/creating-postprocesses"
+order: 57
 category: "systems"
 source: "https://sbox.game/dev/doc/systems/post-processing/creating-postprocesses/"
 ---
@@ -9,7 +10,8 @@ source: "https://sbox.game/dev/doc/systems/post-processing/creating-postprocesse
 
 To make a post process shader you should derive from `BasePostProcess`. This makes it easier to make a component that will be able to blend from multiple others.
 
-public sealed class MyBrightnessEffect: BasePostProcess<MyBrightnessEffect>
+```csharp
+public sealed class MyBrightnessEffect: BasePostProcess
 {
 	[Property, Range( -1, 1 )]
 	public float Brightness{ get; set; } = 0.0f;
@@ -26,6 +28,7 @@ public sealed class MyBrightnessEffect: BasePostProcess<MyBrightnessEffect>
 		Blit( blit, "Brightness" );
 	}
 }
+```
 
 There are a few things here that might need more detail.
 
@@ -43,6 +46,7 @@ You can also specify whether your effect needs the backbuffer or not. If you do,
 
 Here's a very basic shader that will let the component change the brightness.
 
+```csharp
 COMMON
 {
     #include "postprocess/shared.hlsl"
@@ -50,8 +54,8 @@ COMMON
 
 struct VertexInput
 {
-    float3 pos : POSITION < Semantic( PosXyz ); >;
-    float2 uv : TEXCOORD0 < Semantic( LowPrecisionUv ); >;
+    float3 pos : POSITION ;
+    float2 uv : TEXCOORD0 ;
 };
 
 struct PixelInput
@@ -78,8 +82,8 @@ PS
     #include "postprocess/functions.hlsl"
     #include "procedural.hlsl"
 
-    Texture2D colorBuffer < Attribute( "ColorBuffer" ); SrgbRead( true ); >;
-    float brightness< Attribute("brightness"); >;
+    Texture2D colorBuffer ;
+    float brightness;
 
     float4 MainPs( PixelInput i ) : SV_Target0
     {
@@ -91,3 +95,4 @@ PS
         return color;
     }
 }
+```

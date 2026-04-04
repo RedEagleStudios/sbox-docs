@@ -1,6 +1,7 @@
 ---
 title: "Startup"
 slug: "about/getting-started/project-types/game-project"
+order: 9
 category: "about"
 source: "https://sbox.game/dev/doc/about/getting-started/project-types/game-project/"
 ---
@@ -21,7 +22,8 @@ If your game is capable of loading maps from the main menu then that map is load
 
 The way to do this is to create a [GameObjectSystem] that will spawn in all that stuff. Here's an example where we spawn it in from another scene.
 
-public sealed class MyGameManager : GameObjectSystem<MyGameManager>, ISceneStartup
+```csharp
+public sealed class MyGameManager : GameObjectSystem, ISceneStartup
 {
 	public MyGameManager( Scene scene ) : base( scene )
 	{
@@ -35,3 +37,4 @@ public sealed class MyGameManager : GameObjectSystem<MyGameManager>, ISceneStart
 		Scene.Load( slo );
 	}
 }
+```

@@ -1,6 +1,7 @@
 ---
 title: "Simplest Trace"
 slug: "scene/scenes/tracing"
+order: 72
 category: "scene"
 source: "https://sbox.game/dev/doc/scene/scenes/tracing/"
 ---
@@ -11,33 +12,41 @@ Here are some examples.
 
 # Simplest Trace
 
+```csharp
 SceneTraceResult tr = Scene.Trace.Ray( startPos, endPos ).Run();
 
 if ( tr.Hit )
 {
 	Log.Info( $"Hit: {tr.GameObject} at {tr.EndPosition}" );
 }
+```
 
 # Use Collision Rules
 
 This will fire a ray using the collision rules of a `bullet` tag, as configured in your project's Collision settings.
 
+```csharp
 var tr = Scene.Trace
 	.Ray( startPos, endPos )
  	.WithCollisionRules( "bullet" ) // Hits everything that a bullet would hit
  	.Run();
+```
 
 # Sphere Trace
 
+```csharp
 var tr = Scene.Trace
 	.Sphere( 32.0f, startPos, endPos ) // 32 is the radius
 	.WithoutTags( "player" ) // ignore GameObjects with this tag
 	.Run();
+```
 
 # Box Trace
 
+```csharp
 var tr = Scene.Trace
 	.Ray( start, end )
 	.Size( new BBox( -5, 5 ) ) // size of the aabb
 	.UseHitboxes( true ) // hit hitboxes too!
 	.Run();
+```

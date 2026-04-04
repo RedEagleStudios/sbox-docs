@@ -1,6 +1,7 @@
 ---
 title: "How to use our weapons"
 slug: "assets/ready-to-use-assets/first-person-weapons"
+order: 99
 category: "assets"
 source: "https://sbox.game/dev/doc/assets/ready-to-use-assets/first-person-weapons/"
 ---

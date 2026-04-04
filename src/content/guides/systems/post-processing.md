@@ -1,6 +1,7 @@
 ---
-title: "Camera Settings"
+title: "Post Processing"
 slug: "systems/post-processing"
+order: 55
 category: "systems"
 source: "https://sbox.game/dev/doc/systems/post-processing/"
 ---

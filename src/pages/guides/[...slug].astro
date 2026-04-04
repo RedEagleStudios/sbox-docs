@@ -4,20 +4,46 @@ import { getCollection, render } from "astro:content";
 
 export async function getStaticPaths() {
   const guides = await getCollection("guides");
-  return guides.map((guide) => ({
-    params: { slug: guide.data.slug },
-    props: { guide },
-  }));
+  const slugs = new Set(guides.map((g) => g.data.slug));
+
+  const paths = guides
+    .filter((guide) => guide.data.slug !== "index")
+    .map((guide) => ({
+      params: { slug: guide.data.slug },
+      props: { guide, isIndex: false },
+    }));
+
+  // Generate fallback index pages for parent paths that don't have a guide
+  // e.g. /guides/systems, /guides/scene, /guides/editor
+  const parentPaths = new Set<string>();
+  for (const g of guides) {
+    const parts = g.data.slug.split("/");
+    for (let i = 1; i < parts.length; i++) {
+      const parent = parts.slice(0, i).join("/");
+      if (!slugs.has(parent) && !parentPaths.has(parent)) {
+        parentPaths.add(parent);
+        const children = guides.filter((c) => c.data.slug.startsWith(parent + "/"));
+        paths.push({
+          params: { slug: parent },
+          props: { guide: null, isIndex: true, indexSlug: parent, children },
+        });
+      }
+    }
+  }
+
+  return paths;
 }
 
-const { guide } = Astro.props;
-const { Content } = await render(guide);
+const { guide, isIndex, indexSlug, children } = Astro.props;
+const Content = guide ? (await render(guide)).Content : null;
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 
-const breadcrumbParts = guide.data.slug.split("/");
+const currentSlug = guide?.data?.slug || indexSlug;
+const currentTitle = guide?.data?.title || (indexSlug?.split("/").pop()?.replace(/-/g, " ").replace(/\b\w/g, (c: string) => c.toUpperCase()));
+const breadcrumbParts = currentSlug.split("/");
 ---
 
-<GuidesLayout title={guide.data.title} currentSlug={guide.data.slug}>
+<GuidesLayout title={currentTitle} currentSlug={currentSlug}>
   <div data-pagefind-body>
     <!-- Breadcrumb -->
     <div class="flex items-center gap-2 text-sm text-text-muted mb-6 flex-wrap">
@@ -25,12 +51,12 @@ const breadcrumbParts = guide.data.slug.split("/");
       {breadcrumbParts.map((part, i) => {
         const isLast = i === breadcrumbParts.length - 1;
         const path = breadcrumbParts.slice(0, i + 1).join("/");
-        const label = part.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+        const label = part.replace(/-/g, " ").replace(/\b\w/g, (c: string) => c.toUpperCase());
         return (
           <>
             <span>&rsaquo;</span>
             {isLast ? (
-              <span class="text-text">{guide.data.title || label}</span>
+              <span class="text-text">{currentTitle || label}</span>
             ) : (
               <a href={`${base}/guides/${path}`} class="hover:text-accent transition-colors">{label}</a>
             )}
@@ -39,13 +65,34 @@ const breadcrumbParts = guide.data.slug.split("/");
       })}
     </div>
 
-    <!-- Guide content -->
-    <article class="prose prose-invert max-w-none">
-      <Content />
-    </article>
+    <!-- Page title -->
+    <h1 class="text-3xl font-bold text-accent mb-6">{currentTitle}</h1>
+
+    {/* Regular guide page */}
+    {Content && (
+      <article class="prose prose-invert max-w-none">
+        <Content />
+      </article>
+    )}
+
+    {/* Index page — list children */}
+    {isIndex && children && (
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        {children.sort((a, b) => a.data.order - b.data.order).map((child) => (
+          <a
+            href={`${base}/guides/${child.data.slug}`}
+            class="group block rounded-xl border border-border bg-surface p-5 hover:border-accent/50 hover:bg-surface-hover transition-all"
+          >
+            <h2 class="font-semibold text-text group-hover:text-accent transition-colors">
+              {child.data.title}
+            </h2>
+          </a>
+        ))}
+      </div>
+    )}
 
     <!-- Source link -->
-    {guide.data.source && (
+    {guide?.data?.source && (
       <div class="mt-12 pt-4 border-t border-border text-xs text-text-muted">
         <a href={guide.data.source} class="hover:text-accent transition-colors" target="_blank" rel="noopener">
           View original on sbox.game

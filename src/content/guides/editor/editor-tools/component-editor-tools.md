@@ -1,6 +1,7 @@
 ---
 title: "Defining"
 slug: "editor/editor-tools/component-editor-tools"
+order: 94
 category: "editor"
 source: "https://sbox.game/dev/doc/editor/editor-tools/component-editor-tools/"
 ---
@@ -15,7 +16,8 @@ An example of a component tool is the camera preview - which is shown when a [Ga
 
 To define an EditorTool for your Component, you create a class like this.
 
-public class MyEditorTool : EditorTool<MyComponent>
+```csharp
+public class MyEditorTool : EditorTool
 {
 
 	public override void OnEnabled()
@@ -35,9 +37,10 @@ public class MyEditorTool : EditorTool<MyComponent>
 
 	public override void OnSelectionChanged()
 	{
-		var target = GetSelectedComponent<MyComponent>();
+		var target = GetSelectedComponent();
 	}
 }
+```
 
 The method `OnSelectionChanged` is called after the tool is created and registered. It can also be called later if the selection is changed to another component.
 

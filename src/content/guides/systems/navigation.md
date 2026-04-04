@@ -1,6 +1,7 @@
 ---
-title: "What is a NavMesh?"
+title: "Navigation"
 slug: "systems/navigation"
+order: 37
 category: "systems"
 source: "https://sbox.game/dev/doc/systems/navigation/"
 ---
@@ -39,6 +40,7 @@ This allows you to adjust the properties of the mesh, like how steep slopes can 
 
 The navmesh is accessible at `Scene.NavMesh`.
 
+```csharp
 // Get a random position anywhere the navmesh
 var pos = Scene.NavMesh.GetRandomPoint();
 
@@ -64,3 +66,4 @@ if ( path.IsValid() ) // ...
 
 // Mark the navmesh dirty, so it will be rebuilt in the background
 Scene.NavMesh.SetDirty();
+```

@@ -1,6 +1,7 @@
 ---
 title: "String-Specific"
 slug: "editor/property-attributes"
+order: 87
 category: "editor"
 source: "https://sbox.game/dev/doc/editor/property-attributes/"
 ---

@@ -1,6 +1,7 @@
 ---
-title: "Steam Workshop"
+title: "Storage (UGC)"
 slug: "systems/storage-ugc"
+order: 59
 category: "systems"
 source: "https://sbox.game/dev/doc/systems/storage-ugc/"
 ---
@@ -15,6 +16,7 @@ Storage entries are categorized by a string type (like "save" or "dupe"), automa
 
 To create a new storage entry, use `Storage.CreateEntry()` with a type identifier. The entry provides a `Files` property (a `BaseFileSystem`) that you use to read and write files.
 
+```csharp
 // Create a new save game entry
 var saveEntry = Storage.CreateEntry( "save" );
 
@@ -33,6 +35,7 @@ saveEntry.SetMeta( "playtime", 3600 );
 // Create and set a thumbnail
 var thumbnail = CreateThumbnailBitmap(); // Your method to create a Bitmap
 saveEntry.SetThumbnail( thumbnail );
+```
 
 ### Entry Properties
 
@@ -52,6 +55,7 @@ Each entry has the following public properties:
 
 The `Files` property is a full-featured filesystem that supports:
 
+```csharp
 // Write operations
 entry.Files.WriteAllText( "notes.txt", "Player notes..." );
 entry.Files.WriteAllBytes( "screenshot.png", imageBytes );
@@ -60,7 +64,7 @@ entry.Files.WriteJson( "data.json", myObject );
 // Read operations
 string notes = entry.Files.ReadAllText( "notes.txt" );
 byte[] screenshot = entry.Files.ReadAllBytes( "screenshot.png" ).ToArray();
-MyData data = entry.Files.ReadJson<MyData>( "data.json" );
+MyData data = entry.Files.ReadJson( "data.json" );
 
 // File queries
 bool exists = entry.Files.FileExists( "notes.txt" );
@@ -69,11 +73,13 @@ var allFiles = entry.Files.FindFile( "/", "*", recursive: true );
 // Directories
 entry.Files.CreateDirectory( "levels" );
 entry.Files.WriteAllText( "levels/level1.json", levelData );
+```
 
 ## Listing Entries
 
 To retrieve all storage entries of a specific type from disk:
 
+```csharp
 // Get all saved games
 var allSaves = Storage.GetAll( "save" );
 
@@ -84,8 +90,8 @@ foreach ( var save in allSaves )
     Log.Info( $"Created: {save.Created}" );
     
     // Read metadata
-    var playerName = save.GetMeta<string>( "playerName" );
-    var level = save.GetMeta<int>( "level" );
+    var playerName = save.GetMeta( "playerName" );
+    var level = save.GetMeta( "level" );
     
     // Access the thumbnail
     var thumbnail = save.Thumbnail;
@@ -97,12 +103,15 @@ foreach ( var save in allSaves )
         // Load your game...
     }
 }
+```
 
 ### Deleting Entries
 
 To remove an entry from disk:
 
+```csharp
 entry.Delete();
+```
 
 This permanently removes the entry's folder and all its contents.
 
@@ -110,7 +119,9 @@ This permanently removes the entry's folder and all its contents.
 
 Publishing to Steam Workshop is made very simple:
 
+```csharp
 saveEntry.Publish();
+```
 
 This pops open a dialog for the client, where they can name, add a description and change visibility of the entry.
 
@@ -118,6 +129,7 @@ This pops open a dialog for the client, where they can name, add a description a
 
 To search for content on the Steam Workshop, create and configure a `Query`, then run it:
 
+```csharp
 var query = new Storage.Query
 {
 	// Search for items with specific tags
@@ -149,6 +161,7 @@ foreach ( var item in result.Items )
 	Log.Info( $"Created: {item.Created}" );
 	Log.Info( $"Tags: {string.Join( ", ", item.Tags )}" );
 }
+```
 
 ### Available Sort Orders
 
@@ -180,6 +193,7 @@ These are  obviously useful when you only want to find packages from a specific 
 
 To download and use content from the Steam Workshop, just call `Install` on the `Storage.QueryItem`
 
+```csharp
 // From a query result
 var query = new Storage.Query { TagsRequired = { "save" } };
 Storage.QueryResult result = await query.Run();
@@ -193,7 +207,7 @@ if ( entry == null ) throw new Exception( "Failed to install the chosen item." )
 Log.Info( $"Installed: {entry.Type} - {entry.Id}" );
 
 // Read its metadata
-var playerName = entry.GetMeta<string>( "playerName" );
+var playerName = entry.GetMeta( "playerName" );
 
 // Access its files (read-only)
 if ( entry.Files.FileExists( "player.json" ) )
@@ -207,6 +221,7 @@ if ( entry.Files.IsReadOnly )
 {
 	Log.Info( "This is a workshop item (read-only)" );
 }
+```
 
 ### Important Notes
 

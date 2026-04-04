@@ -1,6 +1,7 @@
 ---
 title: "Toolbar"
 slug: "systems/movie-maker/editor-map"
+order: 33
 category: "systems"
 source: "https://sbox.game/dev/doc/systems/movie-maker/editor-map/"
 ---

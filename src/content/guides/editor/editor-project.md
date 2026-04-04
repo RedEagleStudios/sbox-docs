@@ -1,6 +1,7 @@
 ---
 title: "Creating"
 slug: "editor/editor-project"
+order: 84
 category: "editor"
 source: "https://sbox.game/dev/doc/editor/editor-project/"
 ---

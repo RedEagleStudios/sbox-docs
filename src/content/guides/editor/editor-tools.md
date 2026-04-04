@@ -1,12 +1,14 @@
 ---
 title: "The Scene"
 slug: "editor/editor-tools"
+order: 93
 category: "editor"
 source: "https://sbox.game/dev/doc/editor/editor-tools/"
 ---
 
 You can create your own editor tool to help you create your game. Your tool needs to be created in an [editor project](/guides/editor/editor-project).
 
+```csharp
 [EditorTool] // this class is an editor tool
 [Title( "Rocket" )] // title of your tool
 [Icon( "rocket_launch" )] // icon name from https://fonts.google.com/icons?selected=Material+Icons
@@ -28,6 +30,7 @@ public class MyRocketTool : EditorTool
 		
 	}
 }
+```
 
 This will create a tool that you can select here.
 
@@ -37,6 +40,7 @@ This will create a tool that you can select here.
 
 The EditorTool has a member called `Scene` to access the scene.
 
+```csharp
 public override void OnUpdate()
 {
 	var tr = Scene.Trace.Ray( Gizmo.CurrentRay, 5000 )
@@ -54,20 +58,24 @@ public override void OnUpdate()
 		}
 	}
 }
+```
 
 # Preventing Selection
 
 Depending on how your tool operates, you might want to prevent the user's ability to click to select [GameObjects](/guides/scene/gameobject) in the scene. To do this you can change `AllowGameObjectSelection` on your tool.
 
+```csharp
 public override void OnEnabled()
 {
 	AllowGameObjectSelection = false;
 }
+```
 
 # Creating Overlay UI
 
 You can create UI on the scene's overlay. This is useful for creating controls and other things.
 
+```csharp
 public override void OnEnabled()
 {
     // create a widget window. This is a window that  
@@ -88,6 +96,7 @@ public override void OnEnabled()
     // you don't delete your UI in OnDisabled, it'll hang around forever.
 	AddOverlay( window, TextFlag.RightTop, 10 );
 }
+```
 
 The UI is created when the tool is activated, and destroyed when it's deactivated.
 

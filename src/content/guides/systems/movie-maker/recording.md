@@ -1,6 +1,7 @@
 ---
 title: "Recording in Play Mode"
 slug: "systems/movie-maker/recording"
+order: 29
 category: "systems"
 source: "https://sbox.game/dev/doc/systems/movie-maker/recording/"
 ---

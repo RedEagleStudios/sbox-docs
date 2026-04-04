@@ -1,6 +1,7 @@
 ---
-title: "custom nodes"
+title: "Custom Nodes"
 slug: "systems/actiongraph/custom-nodes"
+order: 17
 category: "systems"
 source: "https://sbox.game/dev/doc/systems/actiongraph/custom-nodes/"
 ---

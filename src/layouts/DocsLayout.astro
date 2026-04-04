@@ -1,8 +1,11 @@
 ---
 import "../styles/globals.css";
+import { Icon } from "astro-icon/components";
 import { Sidebar } from "../components/Sidebar";
 import { Search } from "../components/Search";
 import { getNamespaceTree } from "../lib/api-data";
+import ThemeToggle from "../components/ThemeToggle.astro";
+import ThemeScript from "../components/ThemeScript.astro";
 
 interface Props {
   title: string;
@@ -54,6 +57,7 @@ const jsonLd = isHomePage
     <meta property="og:url" content={canonicalURL.href} />
     <meta property="og:site_name" content="s&box API Reference" />
     {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
+    <ThemeScript />
   </head>
   <body class="bg-background text-text">
     <!-- Header -->
@@ -66,9 +70,7 @@ const jsonLd = isHomePage
             class="lg:hidden p-1.5 rounded-md text-text-muted hover:text-text hover:bg-surface-hover transition-colors"
             aria-label="Toggle sidebar"
           >
-            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
+            <Icon name="lucide:menu" class="h-5 w-5" />
           </button>
           <a href={`${base}/`} class="flex items-center gap-2 font-bold text-accent hover:text-accent-hover transition-colors">
             <span class="bg-accent text-white text-xs font-bold px-1.5 py-0.5 rounded">s&</span>
@@ -78,7 +80,7 @@ const jsonLd = isHomePage
         <div class="flex-1 max-w-md mx-4">
           <Search client:idle base={base} />
         </div>
-        <div class="w-8"></div>
+        <ThemeToggle />
       </div>
     </header>
 

@@ -1,6 +1,7 @@
 ---
 title: "Play Testbed"
 slug: "about/getting-started/first-steps"
+order: 4
 category: "about"
 source: "https://sbox.game/dev/doc/about/getting-started/first-steps/"
 ---

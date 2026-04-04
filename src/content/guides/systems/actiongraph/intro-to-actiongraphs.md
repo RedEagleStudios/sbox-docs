@@ -1,6 +1,7 @@
 ---
-title: "intro to actiongraphs"
+title: "Intro to ActionGraphs"
 slug: "systems/actiongraph/intro-to-actiongraphs"
+order: 13
 category: "systems"
 source: "https://sbox.game/dev/doc/systems/actiongraph/intro-to-actiongraphs/"
 ---

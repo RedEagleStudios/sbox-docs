@@ -1,6 +1,7 @@
 ---
-title: "terrain"
+title: "Terrain"
 slug: "systems/terrain"
+order: 60
 category: "systems"
 source: "https://sbox.game/dev/doc/systems/terrain/"
 ---

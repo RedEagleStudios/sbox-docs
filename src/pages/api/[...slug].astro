@@ -60,7 +60,7 @@ const seeAlso = type.Documentation?.SeeAlso ?? [];
   <div data-pagefind-body>
   <!-- Breadcrumb -->
   <div class="flex items-center gap-2 text-sm text-text-muted mb-6 flex-wrap">
-    <a href={`${import.meta.env.BASE_URL.replace(/\/$/, "")}/api/`} class="hover:text-accent transition-colors">Api</a>
+    <a href={`${import.meta.env.BASE_URL.replace(/\/$/, "")}/api/`} class="hover:text-accent transition-colors">API</a>
     {type.Namespace && type.Namespace.split(".").map((part, i, arr) => {
       const path = arr.slice(0, i + 1).join(".");
       return (

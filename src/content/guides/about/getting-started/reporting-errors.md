@@ -1,6 +1,7 @@
 ---
 title: "Issue Tracker"
 slug: "about/getting-started/reporting-errors"
+order: 10
 category: "about"
 source: "https://sbox.game/dev/doc/about/getting-started/reporting-errors/"
 ---

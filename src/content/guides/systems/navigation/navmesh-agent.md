@@ -1,6 +1,7 @@
 ---
 title: "Component"
 slug: "systems/navigation/navmesh-agent"
+order: 38
 category: "systems"
 source: "https://sbox.game/dev/doc/systems/navigation/navmesh-agent/"
 ---
@@ -17,6 +18,7 @@ You would usually create another component, for your main AI logic, which will s
 
 # Code
 
+```csharp
 NavMeshAgent agent = ...
 
 // Sets the target position for the agent. It will try to get there
@@ -28,3 +30,4 @@ agent.Stop();
 
 // The agent's actual velocity
 var velocity = agent.Velocity;
+```

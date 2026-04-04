@@ -1,6 +1,7 @@
 ---
 title: "ExecuteInEditor"
 slug: "scene/components/component-interfaces"
+order: 76
 category: "scene"
 source: "https://sbox.game/dev/doc/scene/components/component-interfaces/"
 ---
@@ -23,6 +24,7 @@ A component marked with `ExecuteInEditor` will also execute these methods in edi
 
 ### Sample code
 
+```csharp
 public sealed class ExecuteInEditorSample : Component, Component.ExecuteInEditor
 {
 	protected override void OnEnabled()
@@ -35,6 +37,7 @@ public sealed class ExecuteInEditorSample : Component, Component.ExecuteInEditor
 		}
 	}
 }
+```
 
 # ICollisionListener
 
@@ -54,6 +57,7 @@ Called when this collider/rigidbody stops touching another collider.
 
 ### Sample code
 
+```csharp
 public sealed class CollisionListenerSample : Component, Component.ICollisionListener
 {
 	public void OnCollisionStart( Collision other )
@@ -71,6 +75,7 @@ public sealed class CollisionListenerSample : Component, Component.ICollisionLis
 		Log.Error( "Collision stopped with: " + other.Other.GameObject );
 	}
 }
+```
 
 # ITriggerListener
 
@@ -87,6 +92,7 @@ Called when a collider stops touching the trigger.
 
 ### Sample code
 
+```csharp
 public sealed class TriggerListenerSample : Component, Component.ITriggerListener
 {
 	public void OnTriggerEnter( Collider other )
@@ -99,6 +105,7 @@ public sealed class TriggerListenerSample : Component, Component.ITriggerListene
 		Log.Error( "Trigger exited with: " + other.GameObject );
 	}
 }
+```
 
 # IDamageable
 
@@ -112,6 +119,7 @@ The method you invoke when damaging something marked with IDamageable
 
 ### Sample code
 
+```csharp
 public sealed class SampleDamageable : Component, Component.IDamageable
 {
 	public void OnDamage( in DamageInfo damage )
@@ -119,7 +127,9 @@ public sealed class SampleDamageable : Component, Component.IDamageable
 		Log.Error( $"I got damaged for {damage.Damage} by {damage.Attacker}" );
 	}
 }
+```
 
+```csharp
 public sealed class ClickToDamage : Component
 {
 	protected override void OnUpdate()
@@ -128,11 +138,11 @@ public sealed class ClickToDamage : Component
 
 		if ( Input.Pressed( "attack1" ) )
 		{
-			var ray = Components.Get<CameraComponent>().ScreenPixelToRay( Mouse.Position );
+			var ray = Components.Get().ScreenPixelToRay( Mouse.Position );
 			var trace = Scene.Trace.Ray( ray, 5000f ).Run();
 			if ( trace.Hit )
 			{
-				var damageable = trace.GameObject.Components.Get<IDamageable>();
+				var damageable = trace.GameObject.Components.Get();
 
 				if ( damageable != null )
 				{
@@ -147,6 +157,7 @@ public sealed class ClickToDamage : Component
 		}
 	}
 }
+```
 
 # INetworkListener
 

@@ -1,6 +1,7 @@
 ---
 title: "Creating a server"
 slug: "systems/networking-multiplayer/network-helper"
+order: 47
 category: "systems"
 source: "https://sbox.game/dev/doc/systems/networking-multiplayer/network-helper/"
 ---
@@ -25,6 +26,7 @@ You can also define a list spawnpoint GameObject's. The player will spawn random
 
 Your player object will usually contain a component with a function like this, which controls the GameObject if it isn't a `Proxy`.
 
+```csharp
 protected override void OnUpdate()
 	{
 		// If we're a proxy then don't do any controls
@@ -39,10 +41,11 @@ protected override void OnUpdate()
 		}
 
 		// position the camera
-		var camera = Scene.GetAllComponents<CameraComponent>().FirstOrDefault();
+		var camera = Scene.GetAllComponents().FirstOrDefault();
 		camera.WorldRotation = new Angles( 45, 0, 0 );
 		camera.WorldPosition  = WorldPosition  + camera.WorldRotation.Backward * 1500;
 	}
+```
 
 # Under The Hood
 

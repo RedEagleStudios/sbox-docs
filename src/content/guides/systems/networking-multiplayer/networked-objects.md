@@ -1,6 +1,7 @@
 ---
 title: "Instantiating a Networked Object"
 slug: "systems/networking-multiplayer/networked-objects"
+order: 42
 category: "systems"
 source: "https://sbox.game/dev/doc/systems/networking-multiplayer/networked-objects/"
 ---
@@ -41,8 +42,10 @@ You can disable interpolation in one of two ways. Either by code, or using the i
 
 ![](https://cdn.sbox.game/doc/3e1740c7-607b-4ba8-8d2d-1857ef52b2cb)
 
+```csharp
 // Disable interpolation for this networked object.
 Network.DisableInterpolation();
+```
 
 ## Clearing Interpolation
 
@@ -50,8 +53,10 @@ Sometimes you want to clear any interpolation for an object. You can do that wit
 
 One use case for this would be to set the position of the object and have the position updated immediately for everybody without interpolation (teleporting.)
 
+```csharp
 Transform.Position = Vector3.Zero;
 Network.ClearInterpolation();
+```
 
 # Refreshing a Networked Object
 

@@ -1,6 +1,7 @@
 ---
 title: "Razor"
 slug: "systems/ui/virtualgrid"
+order: 68
 category: "systems"
 source: "https://sbox.game/dev/doc/systems/ui/virtualgrid/"
 ---
@@ -13,19 +14,21 @@ source: "https://sbox.game/dev/doc/systems/ui/virtualgrid/"
 
 You can use it in Razor like this
 
-<VirtualGrid Items=@Items ItemSize=@(120)>
-    <Item Context="item">
+```csharp
+
+    
         @if (item is Package entry)
         {
-            <SpawnButton Icon="@entry.Thumb" Action="@(() => Spawn(entry))"></SpawnButton>
+             Spawn(entry))">
         }
-    </Item>
-</VirtualGrid>
+    
+
   
 @code
 {
     public Package[] Items{ get; set; }
 }
+```
 
 Here you can see that it sets the Items property (which takes any `IEnumerable`) and the `ItemSize`.
 

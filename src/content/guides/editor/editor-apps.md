@@ -1,6 +1,7 @@
 ---
 title: "Creating"
 slug: "editor/editor-apps"
+order: 86
 category: "editor"
 source: "https://sbox.game/dev/doc/editor/editor-apps/"
 ---
@@ -13,6 +14,7 @@ Examples of editor apps are the ShaderGraph, Material Editor, Model Editor.
 
 To create an Editor App, you just need to add an `[EditorApp]` attribute to its main window.
 
+```csharp
 [EditorApp( "Example App", "pregnant_woman", "Inspect Butts" )]
 public class MyEditorApp : Window
 {
@@ -22,6 +24,7 @@ public class MyEditorApp : Window
 		MinimumSize = new Vector2( 300, 500 );
 	}
 }
+```
 
 The app will be available on the App sidebar and the Apps menu.
 

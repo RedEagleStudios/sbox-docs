@@ -1,6 +1,7 @@
 ---
-title: "keyframe editing"
+title: "Keyframe Editing"
 slug: "systems/movie-maker/keyframe-editing"
+order: 30
 category: "systems"
 source: "https://sbox.game/dev/doc/systems/movie-maker/keyframe-editing/"
 ---

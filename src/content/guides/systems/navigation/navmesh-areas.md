@@ -1,6 +1,7 @@
 ---
 title: "Limitations"
 slug: "systems/navigation/navmesh-areas"
+order: 39
 category: "systems"
 source: "https://sbox.game/dev/doc/systems/navigation/navmesh-areas/"
 ---

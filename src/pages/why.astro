@@ -1,0 +1,95 @@
+---
+import "../styles/globals.css";
+import { Icon } from "astro-icon/components";
+import { Search } from "../components/Search";
+import ThemeToggle from "../components/ThemeToggle.astro";
+import ThemeScript from "../components/ThemeScript.astro";
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href={`${base}/favicon.svg`} />
+    <title>Why - s&box Community Docs</title>
+    <meta name="description" content="Why we built an alternative documentation site for the s&box game engine." />
+    <ThemeScript />
+  </head>
+  <body class="bg-background text-text">
+    <header class="border-b border-border bg-background/80 backdrop-blur-sm">
+      <div class="flex items-center justify-between px-4 h-14 max-w-5xl mx-auto">
+        <a href={`${base}/`} class="flex items-center gap-2 font-bold text-accent hover:text-accent-hover transition-colors">
+          <span class="bg-accent text-white text-xs font-bold px-1.5 py-0.5 rounded">s&</span>
+          <span>Community Docs</span>
+        </a>
+        <div class="flex-1 max-w-md mx-4">
+          <Search client:idle base={base} />
+        </div>
+        <div class="flex items-center gap-4 text-sm text-text-muted">
+          <a href={`${base}/guides/`} class="hover:text-text transition-colors">Guides</a>
+          <a href={`${base}/api/`} class="hover:text-text transition-colors">API</a>
+          <ThemeToggle />
+        </div>
+      </div>
+    </header>
+
+    <main class="max-w-3xl mx-auto px-6 py-16">
+      <a href={`${base}/`} class="inline-flex items-center gap-1 text-sm text-text-muted hover:text-accent transition-colors mb-8">
+        <Icon name="lucide:chevron-left" class="h-4 w-4" />
+        Back
+      </a>
+      <article class="prose prose-invert max-w-none">
+        <h1 class="text-4xl font-bold text-accent mb-8" style="display: block;">Why this exists</h1>
+
+        <p>
+          The official s&box documentation at <a href="https://sbox.game/dev/doc">sbox.game/dev/doc</a> is built with
+          <strong>Blazor Server</strong> — a framework that renders everything on the server and streams UI updates
+          to the browser over a WebSocket connection.
+        </p>
+
+        <p>This means:</p>
+
+        <ul>
+          <li><strong>Every page is fully client-side rendered.</strong> The initial HTML is empty. Nothing loads until the SignalR WebSocket connects and the server pushes the content.</li>
+          <li><strong>It frequently gets stuck on "Reconnecting..."</strong> If the WebSocket drops (bad network, server hiccup, tab in background too long), you're stuck staring at a reconnection spinner. This is not normal web behavior.</li>
+          <li><strong>You can't bookmark or share deep links reliably.</strong> The Blazor router sometimes fails to restore state after a refresh.</li>
+          <li><strong>Search engines can't index it.</strong> Crawlers see an empty page because there's no server-side HTML.</li>
+          <li><strong>It's slow.</strong> Every navigation requires a round-trip to the server. On high latency connections, it's painful.</li>
+        </ul>
+
+        <h2>What we did about it</h2>
+
+        <p>
+          We scraped all 100+ guide pages and 1,827 API types from the official site and built a
+          <strong>fully static site</strong> using <a href="https://astro.build">Astro</a>.
+        </p>
+
+        <ul>
+          <li><strong>Every page is pre-rendered HTML.</strong> No WebSocket, no server dependency, no reconnection spinners. Just HTML files served from a CDN.</li>
+          <li><strong>Hosted on GitHub Pages.</strong> Free, fast, globally distributed. The site loads instantly.</li>
+          <li><strong>Full-text search</strong> powered by <a href="https://pagefind.app">Pagefind</a> — a tiny WASM-based search engine that runs entirely in your browser.</li>
+          <li><strong>SEO-friendly.</strong> Every page has proper meta tags, a sitemap, and structured data. Search engines can actually find and index the content.</li>
+          <li><strong>Editable.</strong> The guides are plain markdown files in the <a href="https://github.com/RedEagleStudios/sbox-docs">GitHub repo</a>. Anyone can submit a fix or improvement via a pull request.</li>
+          <li><strong>Daily auto-updates.</strong> A GitHub Action rebuilds the API reference daily from the latest s&box release data.</li>
+        </ul>
+
+        <h2>No surprises</h2>
+
+        <p>
+          A documentation site should be the most boring, reliable part of a developer's workflow.
+          You open it, you find what you need, you close it. It should never show you a loading spinner,
+          never drop your connection, never serve you an empty page.
+        </p>
+
+        <p>
+          That's what this site aims to be. Fast, static, and predictable.
+        </p>
+
+      </article>
+
+    </main>
+  </body>
+</html>

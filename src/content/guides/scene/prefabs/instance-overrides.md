@@ -1,6 +1,7 @@
 ---
 title: "Visual Indicators"
 slug: "scene/prefabs/instance-overrides"
+order: 82
 category: "scene"
 source: "https://sbox.game/dev/doc/scene/prefabs/instance-overrides/"
 ---

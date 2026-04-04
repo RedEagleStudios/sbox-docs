@@ -1,6 +1,7 @@
 ---
 title: "Implementation"
 slug: "scene/gameobjectsystem"
+order: 80
 category: "scene"
 source: "https://sbox.game/dev/doc/scene/gameobjectsystem/"
 ---
@@ -13,6 +14,7 @@ For example, one of these systems is the `SceneAnimationSystem,` which finds all
 
 To create your own system, you just define a new class that derives from `GameObjectSystem`.
 
+```csharp
 public class MyGameSystem : GameObjectSystem
 {
 	public MyGameSystem( Scene scene ) : base( scene )
@@ -24,11 +26,12 @@ public class MyGameSystem : GameObjectSystem
 	{
 		Log.Info( "Did something!" );
   
-        var allThings = Scene.GetAllComponents<MyThing>();
+        var allThings = Scene.GetAllComponents();
         
         // do something to all of the things
 	}
 }
+```
 
 When a scene is created, a copy of every defined `GameObjectSystem` is created and added to it, you don't need to do anything else.
 
@@ -38,7 +41,8 @@ You can access a GameObjectSystem in a number of ways. One way is using `Scene.G
 
 You can also inherit from `GameObjectSystem` which adds a `static T Current` property to your system.
 
-public class MyGameSystem : GameObjectSystem<MyGameSystem>
+```csharp
+public class MyGameSystem : GameObjectSystem
 {
   	public MyGameSystem( Scene scene ) : base( scene )
 	{
@@ -49,10 +53,13 @@ public class MyGameSystem : GameObjectSystem<MyGameSystem>
         Log.Info( "Hello, World!" );
     }
 }
+```
 
 Then you can use them like…
 
+```csharp
 MyGameSystem.Current.MyMethod();
+```
 
 # Stages & Order
 

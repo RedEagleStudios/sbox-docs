@@ -1,6 +1,7 @@
 ---
-title: "http requests"
+title: "HTTP Requests"
 slug: "systems/networking-multiplayer/http-requests"
+order: 53
 category: "systems"
 source: "https://sbox.game/dev/doc/systems/networking-multiplayer/http-requests/"
 ---
@@ -17,8 +18,10 @@ The command line switch `-allowlocalhttp` will let you access any local URL from
 
 Some common things you might want to do…
 
+```csharp
 // GET request that returns the response as a string
 string response = await Http.RequestStringAsync( "https://google.com" );
 
 // POST request of JSON content ignoring any response
 await Http.RequestAsync( "https://api.facepunch.com/my/method", "POST", Http.CreateJsonContent( playerData ) );
+```

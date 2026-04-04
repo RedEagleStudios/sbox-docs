@@ -1,6 +1,7 @@
 ---
 title: "Example"
 slug: "systems/networking-multiplayer/rpc-messages"
+order: 45
 category: "systems"
 source: "https://sbox.game/dev/doc/systems/networking-multiplayer/rpc-messages/"
 ---
@@ -13,13 +14,16 @@ Supported RPC arguments are the exact same as [Sync properties.](/guides/systems
 
 Imagine your game has a button, and you want it to make a bing noise when it's pressed. You could have a function like this.
 
+```csharp
 void OnPressed()
 {
 	Sound.FromWorld( "bing", WorldPosition );
 }
+```
 
 The problem here is, that sound is only played on the host, or on the client where OnPressed is called. You want everyone to hear that sound. So you instead do something like this.
 
+```csharp
 void OnPressed()
 {
 	PlayOpenEffects();
@@ -30,6 +34,7 @@ public void PlayOpenEffects()
 {
 	Sound.FromWorld( "bing", WorldPosition );
 }
+```
 
 The attribute `[Rpc.Broadcast]`makes it so when you call that function, it broadcasts a network message to everyone to call that function too.
 
@@ -37,11 +42,13 @@ The attribute `[Rpc.Broadcast]`makes it so when you call that function, it broad
 
 Static methods can be RPCs, too. A static RPC does not need to exist on a `Component` but can exist as a method on any static class.
 
+```csharp
 [Rpc.Broadcast]
 public static void PlaySoundAllClients( string soundName, Vector3 position )
 {
 	Sound.Play( soundName, position );
 }
+```
 
 # `Rpc.Owner`
 
@@ -55,11 +62,13 @@ Similarly to Rpc.Owner, adding this will mean the function is only called on the
 
 When defining an RPC, you can define a number of flags.
 
+```csharp
 [Rpc.Broadcast( NetFlags.Unreliable | NetFlag.OwnerOnly )]
 public static void PlaySoundAllClients( string soundName, Vector3 position )
 {
   // ...
 }
+```
 
 Name
 Description
@@ -86,6 +95,7 @@ This RPC can only be called from the owner of the object it's being called on.
 
 You can pass arguments to the RPC like any other method, and they'll get passed magically.
 
+```csharp
 void OnPressed()
 {
 	PlayOpenEffects( "bing", WorldPosition );
@@ -96,11 +106,13 @@ public void PlayOpenEffects( string soundName, Vector3 position )
 {
 	Sound.FromWorld( soundName, position );
 }
+```
 
 # Filtering
 
 You can filter the recipients of a *Broadcast* RPC. This allows you to exclude specific connections from receiving the RPC, or *only* include specific connections.
 
+```csharp
 // Don't send the RPC to player's called Harry (sorry Harry!)
 using ( Rpc.FilterExclude( c => c.DisplayName == "Harry" ) )
 {
@@ -112,11 +124,13 @@ using ( Rpc.FilterInclude( c => c.DisplayName == "Garry" ) )
 {
 	PlayOpenEffects( "bing", WorldPosition );
 }
+```
 
 # Caller Information
 
 You can check which connection called the method using the `Rpc.Caller` class.
 
+```csharp
 void OnPressed()
 {
 	PlayOpenEffects( "bing", WorldPosition );
@@ -130,3 +144,4 @@ public void PlayOpenEffects( string soundName, Vector3 position )
 	Log.Info( $"{Rpc.Caller.DisplayName} with the steamid {Rpc.Caller.SteamId} played open effects!" );
 	Sound.FromWorld( soundName, position );
 }
+```

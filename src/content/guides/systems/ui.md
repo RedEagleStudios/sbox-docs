@@ -1,6 +1,7 @@
 ---
 title: "Making a C# Panel"
 slug: "systems/ui"
+order: 63
 category: "systems"
 source: "https://sbox.game/dev/doc/systems/ui/"
 ---
@@ -15,6 +16,7 @@ They can be created directly in code or via Razor files with HTML/CSS syntax.
 
 Here's a basic example of a Panel that simply displays `Time.Now`:
 
+```csharp
 public class MyPanel : Panel
 {
   public Label MyLabel { get; set; }
@@ -30,22 +32,28 @@ public class MyPanel : Panel
     MyLabel.Text = $"{Time.Now}";
   }
 }
+```
 
 # Using a Panel
 
 Once you've create a Panel, it can be used in two different ways. The first is done identically to how we added a `Label` in the example above:
 
+```csharp
 var myPanel = new MyPanel();
 myPanel.Parent = this;
+```
 
 The other is by using the following syntax within a [Razor Panels] file:
 
-<MyPanel />
+```csharp
+
+```
 
 # Creating a C# Root Panel
 
 To draw your UI to either the Screen or to a World Panel, you'll need to create a PanelComponent. A PanelComponent acts as the root of all UI, and is added to any GameObject with either a ScreenPanel or WorldPanel component. Here's an example of how you can create a basic one including the above panel:
 
+```csharp
 public sealed class MyRootPanel : PanelComponent
 {
 	MyPanel myPanel;
@@ -58,6 +66,7 @@ public sealed class MyRootPanel : PanelComponent
 		myPanel.Parent = Panel;
 	}
 }
+```
 
 # Scaling
 

@@ -1,6 +1,7 @@
 ---
 title: "Tokens"
 slug: "systems/ui/localization"
+order: 67
 category: "systems"
 source: "https://sbox.game/dev/doc/systems/ui/localization/"
 ---
@@ -15,16 +16,20 @@ In UI, any displayed string that begins with a `#` will be recognized as a token
 
 Filename: `Localization/en/sandbox.json`
 
+```csharp
 {
   "menu.helloworld": "Hello World",
   "spawnmenu.props": "Models",
   "spawnmenu.tools": "Tools"
   "spawnmenu.cloud": "sbox.game",
 }
+```
 
 Then it's as easy as doing the following:
 
-<label>#spawnmenu.props</label>
+```csharp
+#spawnmenu.props
+```
 
 # Languages
 

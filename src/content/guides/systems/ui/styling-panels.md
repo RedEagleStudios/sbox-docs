@@ -1,6 +1,7 @@
 ---
 title: "Using Stylesheets"
 slug: "systems/ui/styling-panels"
+order: 65
 category: "systems"
 source: "https://sbox.game/dev/doc/systems/ui/styling-panels/"
 ---
@@ -17,11 +18,15 @@ If you do this, the scss file is automatically included by your Health.razor pan
 
 If you want to specify a different location for the loaded Stylesheet, you can add this to your Panel class:
 
+```csharp
 [StyleSheet("main.scss")]
+```
 
 You can also import a stylesheet from within another stylesheet like so:
 
+```csharp
 @import "buttons.scss";
+```
 
 # Styling Directly
 
@@ -31,26 +36,32 @@ There are a few ways to style your Panels without a stylesheet. It's really reco
 
 You can directly style any element just like you can in HTML, but can inject C# when necessary:
 
-<label style="color: red">DANGER!</label>
-<div class="progress-bar">
-  <div class="fill" style="width: @(Progress * 100f)%"></div>
-</div>
+```csharp
+DANGER!
+
+  
+
+```
 
 ### Style Block
 
 Before or after your `` element, you can add a `` block that is read just like a Stylesheet:
 
-<style>
+```csharp
+
   MyPanel {
     width: 100%;
     height: 100%;
   }
   .hp { color: red; }
   .armor { color: blue; }
-</style>
+
+```
 
 ### Styling in Code
 
 You can a Panel's [Style](https://sbox.game/api/Sandbox.UI.BaseStyles) directly and modify the values however you'd like via `Tick()` or `OnUpdate()`:
 
+```csharp
 myPanel.Style.Width = Length.Percent(Progress * 100f);
+```

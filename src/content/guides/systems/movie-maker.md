@@ -1,6 +1,7 @@
 ---
-title: "movie maker"
+title: "Movie Maker"
 slug: "systems/movie-maker"
+order: 26
 category: "systems"
 source: "https://sbox.game/dev/doc/systems/movie-maker/"
 ---

@@ -1,6 +1,7 @@
 ---
 title: "Installation"
 slug: "systems/networking-multiplayer/dedicated-servers"
+order: 49
 category: "systems"
 source: "https://sbox.game/dev/doc/systems/networking-multiplayer/dedicated-servers/"
 ---
@@ -19,8 +20,10 @@ You can use `-beta staging` to host a server on the staging branch, this might n
 
 Once installed, the default directory would be `steamcmd/steamapps/common/Dedicated Server` and you can create a simple .bat file there that will start your server. Here's an example, you could create a file called `Run-Server.bat` that looks like this:
 
+```csharp
 echo off
 sbox-server.exe +game facepunch.walker garry.scenemap +hostname My Dedicated Server
+```
 
 When run, this will load the `facepunch.walker` game with the `garry.scenemap` map and the title would be *My Dedicated Server*.
 

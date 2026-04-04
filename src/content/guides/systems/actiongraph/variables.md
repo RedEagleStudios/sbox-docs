@@ -1,6 +1,7 @@
 ---
-title: "variables"
+title: "Variables"
 slug: "systems/actiongraph/variables"
+order: 16
 category: "systems"
 source: "https://sbox.game/dev/doc/systems/actiongraph/variables/"
 ---

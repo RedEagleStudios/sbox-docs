@@ -1,6 +1,7 @@
 ---
-title: "libraries"
+title: "Libraries"
 slug: "code/libraries"
+order: 11
 category: "code"
 source: "https://sbox.game/dev/doc/code/libraries/"
 ---

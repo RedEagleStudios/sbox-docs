@@ -1,6 +1,7 @@
 ---
 title: "Flowchart"
 slug: "scene/components/execution-order"
+order: 79
 category: "scene"
 source: "https://sbox.game/dev/doc/scene/components/execution-order/"
 ---

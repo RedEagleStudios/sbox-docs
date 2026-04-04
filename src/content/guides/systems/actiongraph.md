@@ -1,6 +1,7 @@
 ---
-title: "actiongraph"
+title: "ActionGraph"
 slug: "systems/actiongraph"
+order: 12
 category: "systems"
 source: "https://sbox.game/dev/doc/systems/actiongraph/"
 ---

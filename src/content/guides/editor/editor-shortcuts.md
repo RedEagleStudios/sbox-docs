@@ -1,6 +1,7 @@
 ---
 title: "Creating a Static Shortcut"
 slug: "editor/editor-shortcuts"
+order: 90
 category: "editor"
 source: "https://sbox.game/dev/doc/editor/editor-shortcuts/"
 ---
@@ -15,11 +16,13 @@ Editor Shortcuts do exactly that, while also giving the user the option to rebin
 
 Shortcuts are created by adding the `[Shortcut]` attribute to a function, giving a name and default bind. The function can reside within any class (including static classes).
 
+```csharp
 [Shortcut("scene.toggle-gizmos", "SHIFT+G")]
 static void ToggleGizmos()
 {
     // Do stuff...
 }
+```
 
 Now whenever you press SHIFT+G in the editor, this static function will be run if the primary Editor window is in focus.
 
@@ -27,11 +30,13 @@ Now whenever you press SHIFT+G in the editor, this static function will be run i
 
 Widget Shortcuts are created just the same, but there's some optional parameters to play with.
 
+```csharp
 [Shortcut("mesh.merge", "M", typeof(SceneViewportWidget), ShortcutType.Widget)]
 private void Merge()
 {
     // Do stuff...
 }
+```
 
 The last 2 arguments are optional.
 
