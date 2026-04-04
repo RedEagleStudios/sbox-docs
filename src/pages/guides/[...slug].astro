@@ -91,11 +91,16 @@ const breadcrumbParts = currentSlug.split("/");
       </div>
     )}
 
-    <!-- Source link -->
-    {guide?.data?.source && (
-      <div class="mt-12 pt-4 border-t border-border text-xs text-text-muted">
-        <a href={guide.data.source} class="hover:text-accent transition-colors" target="_blank" rel="noopener">
-          View original on sbox.game
+    <!-- Footer links -->
+    {guide && (
+      <div class="mt-12 pt-4 border-t border-border text-xs text-text-muted flex flex-wrap gap-4">
+        {guide.data.source && (
+          <a href={guide.data.source} class="hover:text-accent transition-colors" target="_blank" rel="noopener">
+            View original on sbox.game
+          </a>
+        )}
+        <a href={`https://github.com/RedEagleStudios/sbox-docs/edit/main/src/content/guides/${guide.data.slug}.md`} class="hover:text-accent transition-colors" target="_blank" rel="noopener">
+          Edit on GitHub
         </a>
       </div>
     )}
