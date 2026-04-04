@@ -69,7 +69,18 @@ export function Search({ base = "" }: { base?: string }) {
         response.results.slice(0, 15).map((r) => r.data())
       );
       if (!cancelled) {
-        setResults(data);
+        // Sort: prioritize results matching current section
+        const currentPath = window.location.pathname;
+        const isInApi = currentPath.includes("/api/");
+        const isInDoc = currentPath.includes("/doc/");
+        const sorted = data.sort((a, b) => {
+          const aIsApi = a.url.includes("/api/");
+          const bIsApi = b.url.includes("/api/");
+          if (isInApi) return aIsApi === bIsApi ? 0 : aIsApi ? -1 : 1;
+          if (isInDoc) return aIsApi === bIsApi ? 0 : aIsApi ? 1 : -1;
+          return 0;
+        });
+        setResults(sorted);
         setSelected(0);
         setLoading(false);
       }
@@ -145,7 +156,16 @@ export function Search({ base = "" }: { base?: string }) {
                   i === selected ? "bg-accent/20 text-accent" : "text-text hover:bg-surface-hover"
                 }`}
               >
-                <div className="font-medium truncate">{r.meta.title}</div>
+                <div className="flex items-center gap-2">
+                  <span className={`shrink-0 text-[10px] font-medium px-1.5 py-0.5 rounded border ${
+                    r.url.includes("/api/")
+                      ? "text-blue-400 border-blue-500/30 bg-blue-500/10"
+                      : "text-green-400 border-green-500/30 bg-green-500/10"
+                  }`}>
+                    {r.url.includes("/api/") ? "API" : "Guide"}
+                  </span>
+                  <span className="font-medium truncate">{r.meta.title}</span>
+                </div>
                 {r.excerpt && (
                   <div
                     className="text-xs text-text-muted line-clamp-2 [&_mark]:bg-accent/30 [&_mark]:text-accent [&_mark]:rounded [&_mark]:px-0.5"
